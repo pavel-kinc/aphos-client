@@ -1,16 +1,17 @@
 import setuptools
 
-with open("aphos_openapi/aphos_openapi_README.md", "r") as fh:
+with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name="aphos_openapi",
-    version="0.0.1",
+    version="0.0.3",
     author="Pavel Kinc",
     description="Test",
     long_description=long_description,
     long_description_content_type="text/markdown",
     packages=setuptools.find_packages(),
+    license_files=["LICENSE"],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

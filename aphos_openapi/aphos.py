@@ -1,23 +1,10 @@
-import datetime
-import math
-import time
-from inspect import signature, getcallargs, getargvalues, currentframe
-
+from aphos_openapi import *
 import aphos_openapi
-from pprint import pprint
-
-from aphos_openapi.api import catalog_api
-from aphos_openapi.api import flux_api
-from aphos_openapi.api import space_object_api
-from aphos_openapi.api import user_api
-from aphos_openapi.model import flux
-from aphos_openapi.model.error_message import ErrorMessage
-from aphos_openapi.model.flux_data import FluxData
 
 # Defining the host is optional and defaults to http://localhost:8009
 # See configuration.py for a list of all supported configuration parameters.
 configuration = aphos_openapi.Configuration(
-    host="http://localhost:8009"
+    host="https://ip-147-251-21-104.flt.cloud.muni.cz/"
 )
 
 default_catalog = "UCAC4"
@@ -114,7 +101,10 @@ def getFloat(string):
         return None
 
 def hello():
-    print("hello")
+    print("hello" + " aphos version " + pkg_resources.require("aphos_openapi")[0].version)
+
+def help():
+    print("""help -> README.md -> https://test.pypi.org/project/aphos-openapi/\nTODO""")
 
 
 #o=getObject("805-031770")
@@ -123,7 +113,7 @@ def hello():
 # k=getObject("805-031770")
 #k = getComparisonByIds("805-031770", "781-038863")  # not saturated
 # pprint(k)
-
+#help()
 #l = getComparisonByIds("805-031770", "807-030174")  # saturated
 # pprint(l)
 #date = datetime.date(2021, 11, 6)
