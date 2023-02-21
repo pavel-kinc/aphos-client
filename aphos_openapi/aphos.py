@@ -1,4 +1,3 @@
-from aphos_openapi import *
 import aphos_openapi
 
 # Defining the host is optional and defaults to http://localhost:8009
@@ -14,7 +13,7 @@ def getCatalogs():
     # Enter a context with an instance of the API client
     with aphos_openapi.ApiClient(configuration) as api_client:
         # Create an instance of the API class
-        api_instance = catalog_api.CatalogApi(api_client)
+        api_instance = aphos_openapi.catalog_api.CatalogApi(api_client)
 
         try:
             # Find all catalogs
@@ -27,7 +26,7 @@ def getObject(object_id, catalog=default_catalog):
     # Enter a context with an instance of the API client
     with aphos_openapi.ApiClient(configuration) as api_client:
         # Create an instance of the API class
-        api_instance = space_object_api.SpaceObjectApi(api_client)
+        api_instance = aphos_openapi.space_object_api.SpaceObjectApi(api_client)
 
         try:
             return api_instance.get_space_object_by_id(object_id, catalog=catalog)
@@ -39,12 +38,12 @@ def getObjectsByParams(object_id=None, catalog=None, name=None, coordinates=None
     # Enter a context with an instance of the API client
     with aphos_openapi.ApiClient(configuration) as api_client:
         # Create an instance of the API class
-        api_instance = space_object_api.SpaceObjectApi(api_client)
+        api_instance = aphos_openapi.space_object_api.SpaceObjectApi(api_client)
 
         try:
             params = dict()
             local_args = locals().copy()
-            for key in getcallargs(getObjectsByParams).keys():
+            for key in aphos_openapi.getcallargs(getObjectsByParams).keys():
                 if key in local_args and local_args[key] is not None:
                     params[key] = local_args[key]
             return api_instance.find_space_objects_by_params(**params)
@@ -56,7 +55,7 @@ def getComparisonByIds(originalId, referenceId, originalCat=default_catalog, ref
     # Enter a context with an instance of the API client
     with aphos_openapi.ApiClient(configuration) as api_client:
         # Create an instance of the API class
-        api_instance = space_object_api.SpaceObjectApi(api_client)
+        api_instance = aphos_openapi.space_object_api.SpaceObjectApi(api_client)
 
         try:
             return api_instance.get_comparison_by_identificators \
@@ -69,7 +68,7 @@ def getUser(username):
     # Enter a context with an instance of the API client
     with aphos_openapi.ApiClient(configuration) as api_client:
         # Create an instance of the API class
-        api_instance = user_api.UserApi(api_client)
+        api_instance = aphos_openapi.user_api.UserApi(api_client)
 
         try:
             return api_instance.get_user_by_username(username)
@@ -77,7 +76,7 @@ def getUser(username):
             print("Exception when calling CatalogApi->get_catalogs: %s\n" % e)
 
 
-def setComparisonApertures(comparison, night: datetime.date, orig=None, ref=None):
+def setComparisonApertures(comparison, night: aphos_openapi.datetime.date, orig=None, ref=None):
     night_str = str(night.strftime("%d-%m-%Y"))
     for flux in comparison.data:
         if flux.night.first_date_of_the_night == night_str:
@@ -90,7 +89,7 @@ def setComparisonApertures(comparison, night: datetime.date, orig=None, ref=None
             orig_ap = flux.apertures[orig] if orig is not None else flux.ap_auto
             ref_ap = flux.ref_apertures[ref] if ref is not None else flux.ref_ap_auto
             if not orig_ap == "saturated" and not ref_ap == "saturated":
-                flux.magnitude = -2.5 * math.log(getFloat(orig_ap) / getFloat(ref_ap), 10)
+                flux.magnitude = -2.5 * aphos_openapi.math.log(getFloat(orig_ap) / getFloat(ref_ap), 10)
     return comparison
 
 
@@ -101,7 +100,7 @@ def getFloat(string):
         return None
 
 def hello():
-    print("hello" + " aphos version " + pkg_resources.require("aphos_openapi")[0].version)
+    print("hello" + " aphos version " + aphos_openapi.pkg_resources.require("aphos_openapi")[0].version)
 
 def help():
     print("""help -> README.md -> https://test.pypi.org/project/aphos-openapi/\nTODO""")

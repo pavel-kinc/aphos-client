@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="aphos_openapi",
-    version="0.0.3",
+    version="0.0.4",
     author="Pavel Kinc",
     description="Test",
     long_description=long_description,
