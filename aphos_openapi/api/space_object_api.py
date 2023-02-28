@@ -23,7 +23,6 @@ from aphos_openapi.model_utils import (  # noqa: F401
     validate_and_convert_types
 )
 from aphos_openapi.model.comparison_object import ComparisonObject
-from aphos_openapi.model.coordinates import Coordinates
 from aphos_openapi.model.error_message import ErrorMessage
 from aphos_openapi.model.space_object import SpaceObject
 from aphos_openapi.model.space_object_with_fluxes import SpaceObjectWithFluxes
@@ -93,7 +92,7 @@ class SpaceObjectApi(object):
                     'name':
                         (str,),
                     'coordinates':
-                        (Coordinates,),
+                        (str,),
                     'min_mag':
                         (str,),
                     'max_mag':
@@ -285,7 +284,7 @@ class SpaceObjectApi(object):
             object_id (str): Find object based on it's ID in given catalog. [optional]
             catalog (str): Catalog of space object to return   Default is UCAC4. [optional]
             name (str): Find object by it's name. [optional]
-            coordinates (Coordinates): Filter by coordinates. [optional]
+            coordinates (str): Filter by coordinates. [optional]
             min_mag (str): Find objects based on min magnitude. [optional] if omitted the server will use the default value of "0"
             max_mag (str): Find objects based on max magnitude. [optional] if omitted the server will use the default value of "15"
             _return_http_data_only (bool): response data without head status

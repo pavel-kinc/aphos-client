@@ -1,9 +1,12 @@
+from pprint import pprint
+
 import aphos_openapi
 
 # Defining the host is optional and defaults to http://localhost:8009
 # See configuration.py for a list of all supported configuration parameters.
 configuration = aphos_openapi.Configuration(
     host="https://ip-147-251-21-104.flt.cloud.muni.cz/"
+    #host="http://localhost:8009"
 )
 
 default_catalog = "UCAC4"
@@ -106,16 +109,22 @@ def help():
     print("""help -> README.md -> https://test.pypi.org/project/aphos-openapi/\nTODO""")
 
 
-#o=getObject("805-031770")
+o=getObject("805-031770")
 #pprint(o)
-#print(type(o))
-# k=getObject("805-031770")
-#k = getComparisonByIds("805-031770", "781-038863")  # not saturated
-# pprint(k)
-#help()
-#l = getComparisonByIds("805-031770", "807-030174")  # saturated
-# pprint(l)
-#date = datetime.date(2021, 11, 6)
-#c = setComparisonApertures(k, date, 0, 9)
-# pprint(k)
+print(type(o))
+k=getObject("805-031770")
+k = getComparisonByIds("805-031770", "781-038863")  # not saturated
+#pprint(k)
+help()
+l = getComparisonByIds("805-031770", "807-030174")  # saturated
+#pprint(l)
+date = aphos_openapi.datetime.date(2021, 11, 6)
+c = setComparisonApertures(k, date, 0, 9)
+#pprint(k)
 #pprint(c)
+#c = Coordinates(right_asc="21:41:55.291", declination="71:18:41.12", radius=0.05)
+#pprint(c)
+#c=Coordinates("21:41:55.291+71:18:41.12", 0.05)
+#pprint(c.right_asc)
+c=getObjectsByParams(min_mag='5.0')
+pprint(len(c))

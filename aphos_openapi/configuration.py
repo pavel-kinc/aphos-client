@@ -399,8 +399,8 @@ class Configuration(object):
                 'description': "Main server APhoS",
             },
             {
-                'url': "https://test.aphos.cerit-sc.cz",
-                'description': "test",
+                'url': "https://ip-147-251-21-104.flt.cloud.muni.cz",
+                'description': "Test server (virtual machine) - CURRENT",
             }
         ]
 

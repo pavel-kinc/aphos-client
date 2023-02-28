@@ -91,11 +91,15 @@ class FluxData(ModelNormal):
             'right_asc': (str,),  # noqa: E501
             'dec': (str,),  # noqa: E501
             'ap_auto': (str,),  # noqa: E501
+            'ap_auto_dev': (float,),  # noqa: E501
             'apertures': ([str],),  # noqa: E501
+            'aperture_devs': ([float],),  # noqa: E501
             'ref_ap_auto': (str,),  # noqa: E501
+            'ref_ap_auto_dev': (float,),  # noqa: E501
             'ref_apertures': ([str],),  # noqa: E501
-            'magnitude': (float,str,),  # noqa: E501
-            'deviation': (float, type(None),),  # noqa: E501
+            'ref_aperture_devs': ([float],),  # noqa: E501
+            'magnitude': (float,str),  # noqa: E501
+            'deviation': (float,type(None)),  # noqa: E501
             'username': (str,),  # noqa: E501
             'night': (Night,),  # noqa: E501
             'exp_middle': (str,),  # noqa: E501
@@ -110,9 +114,13 @@ class FluxData(ModelNormal):
         'right_asc': 'rightAsc',  # noqa: E501
         'dec': 'dec',  # noqa: E501
         'ap_auto': 'apAuto',  # noqa: E501
+        'ap_auto_dev': 'apAutoDev',  # noqa: E501
         'apertures': 'apertures',  # noqa: E501
+        'aperture_devs': 'apertureDevs',  # noqa: E501
         'ref_ap_auto': 'refApAuto',  # noqa: E501
+        'ref_ap_auto_dev': 'refApAutoDev',  # noqa: E501
         'ref_apertures': 'refApertures',  # noqa: E501
+        'ref_aperture_devs': 'refApertureDevs',  # noqa: E501
         'magnitude': 'magnitude',  # noqa: E501
         'deviation': 'deviation',  # noqa: E501
         'username': 'username',  # noqa: E501
@@ -164,9 +172,13 @@ class FluxData(ModelNormal):
             right_asc (str): [optional]  # noqa: E501
             dec (str): [optional]  # noqa: E501
             ap_auto (str): [optional]  # noqa: E501
+            ap_auto_dev (float): [optional]  # noqa: E501
             apertures ([str]): [optional]  # noqa: E501
+            aperture_devs ([float]): [optional]  # noqa: E501
             ref_ap_auto (str): [optional]  # noqa: E501
+            ref_ap_auto_dev (float): [optional]  # noqa: E501
             ref_apertures ([str]): [optional]  # noqa: E501
+            ref_aperture_devs ([float]): [optional]  # noqa: E501
             magnitude (float): [optional]  # noqa: E501
             deviation (float): [optional]  # noqa: E501
             username (str): [optional]  # noqa: E501
@@ -262,9 +274,13 @@ class FluxData(ModelNormal):
             right_asc (str): [optional]  # noqa: E501
             dec (str): [optional]  # noqa: E501
             ap_auto (str): [optional]  # noqa: E501
+            ap_auto_dev (float): [optional]  # noqa: E501
             apertures ([str]): [optional]  # noqa: E501
+            aperture_devs ([float]): [optional]  # noqa: E501
             ref_ap_auto (str): [optional]  # noqa: E501
+            ref_ap_auto_dev (float): [optional]  # noqa: E501
             ref_apertures ([str]): [optional]  # noqa: E501
+            ref_aperture_devs ([float]): [optional]  # noqa: E501
             magnitude (float): [optional]  # noqa: E501
             deviation (float): [optional]  # noqa: E501
             username (str): [optional]  # noqa: E501

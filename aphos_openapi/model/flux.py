@@ -94,6 +94,8 @@ class Flux(ModelNormal):
             'ap_auto': (float,),  # noqa: E501
             'apertures': ([float],),  # noqa: E501
             'photo': (PhotoProperties,),  # noqa: E501
+            'ap_auto_dev': (float,),  # noqa: E501
+            'aperture_devs': ([float],),  # noqa: E501
         }
 
     @cached_property
@@ -108,6 +110,8 @@ class Flux(ModelNormal):
         'ap_auto': 'apAuto',  # noqa: E501
         'apertures': 'apertures',  # noqa: E501
         'photo': 'photo',  # noqa: E501
+        'ap_auto_dev': 'apAutoDev',  # noqa: E501
+        'aperture_devs': 'apertureDevs',  # noqa: E501
     }
 
     read_only_vars = {
@@ -157,6 +161,8 @@ class Flux(ModelNormal):
             ap_auto (float): [optional]  # noqa: E501
             apertures ([float]): [optional]  # noqa: E501
             photo (PhotoProperties): [optional]  # noqa: E501
+            ap_auto_dev (float): [optional]  # noqa: E501
+            aperture_devs ([float]): [optional]  # noqa: E501
         """
 
         _check_type = kwargs.pop('_check_type', True)
@@ -248,6 +254,8 @@ class Flux(ModelNormal):
             ap_auto (float): [optional]  # noqa: E501
             apertures ([float]): [optional]  # noqa: E501
             photo (PhotoProperties): [optional]  # noqa: E501
+            ap_auto_dev (float): [optional]  # noqa: E501
+            aperture_devs ([float]): [optional]  # noqa: E501
         """
 
         _check_type = kwargs.pop('_check_type', True)

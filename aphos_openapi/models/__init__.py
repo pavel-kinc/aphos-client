@@ -10,7 +10,6 @@
 # sys.setrecursionlimit(n)
 
 from aphos_openapi.model.comparison_object import ComparisonObject
-from aphos_openapi.model.coordinates import Coordinates
 from aphos_openapi.model.error_message import ErrorMessage
 from aphos_openapi.model.flux import Flux
 from aphos_openapi.model.flux_data import FluxData

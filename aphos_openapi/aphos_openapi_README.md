@@ -71,7 +71,6 @@ Class | Method | HTTP request | Description
 ## Documentation For Models
 
  - [ComparisonObject](aphos_openapi\docs/ComparisonObject.md)
- - [Coordinates](aphos_openapi\docs/Coordinates.md)
  - [ErrorMessage](aphos_openapi\docs/ErrorMessage.md)
  - [Flux](aphos_openapi\docs/Flux.md)
  - [FluxData](aphos_openapi\docs/FluxData.md)
