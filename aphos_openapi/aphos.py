@@ -1,6 +1,7 @@
 from pprint import pprint
 
 import aphos_openapi
+from aphos_openapi.models.coordinates import Coordinates
 
 # Defining the host is optional and defaults to http://localhost:8009
 # See configuration.py for a list of all supported configuration parameters.
@@ -48,6 +49,9 @@ def getObjectsByParams(object_id=None, catalog=None, name=None, coordinates=None
             local_args = locals().copy()
             for key in aphos_openapi.getcallargs(getObjectsByParams).keys():
                 if key in local_args and local_args[key] is not None:
+                    if(key == 'coordinates'):
+                        local_args[key] = str(local_args[key])
+                        print(local_args[key])
                     params[key] = local_args[key]
             return api_instance.find_space_objects_by_params(**params)
         except aphos_openapi.ApiException as e:
@@ -82,18 +86,24 @@ def getUser(username):
 def setComparisonApertures(comparison, night: aphos_openapi.datetime.date, orig=None, ref=None):
     night_str = str(night.strftime("%d-%m-%Y"))
     for flux in comparison.data:
+
         if flux.night.first_date_of_the_night == night_str:
             ap_len = len(flux.apertures)
+
             if orig is None or 0 <= orig < ap_len:
                 flux.night.ap_to_be_used = str(orig) if orig is not None else "auto"
             ref_ap_len = len(flux.ref_apertures)
+
             if ref is None or 0 <= ref < ref_ap_len:
                 flux.night.ref_ap_to_be_used = str(ref) if ref is not None else "auto"
             orig_ap = flux.apertures[orig] if orig is not None else flux.ap_auto
             ref_ap = flux.ref_apertures[ref] if ref is not None else flux.ref_ap_auto
+
             if not orig_ap == "saturated" and not ref_ap == "saturated":
                 flux.magnitude = -2.5 * aphos_openapi.math.log(getFloat(orig_ap) / getFloat(ref_ap), 10)
-    return comparison
+                orig_dev = flux.aperture_devs[orig] if orig is not None else flux.ap_auto_dev
+                ref_dev = flux.ref_aperture_devs[ref] if ref is not None else flux.ref_ap_auto_dev
+                flux.deviation = ((orig_dev/getFloat(orig_ap))**2 + (ref_dev/getFloat(ref_ap))**2)**0.5
 
 
 def getFloat(string):
@@ -112,19 +122,24 @@ def help():
 o=getObject("805-031770")
 #pprint(o)
 print(type(o))
-k=getObject("805-031770")
+k=getObject("604-024734")
 k = getComparisonByIds("805-031770", "781-038863")  # not saturated
+#pprint(k)
+#k = getComparisonByIds("605-025126", "606-024588")  # not saturated
 #pprint(k)
 help()
 l = getComparisonByIds("805-031770", "807-030174")  # saturated
-#pprint(l)
-date = aphos_openapi.datetime.date(2021, 11, 6)
-c = setComparisonApertures(k, date, 0, 9)
-#pprint(k)
+pprint(l)
+date = aphos_openapi.datetime.date(2021,11, 6)
+setComparisonApertures(l, date, 9, 9)
+pprint(l)
 #pprint(c)
 #c = Coordinates(right_asc="21:41:55.291", declination="71:18:41.12", radius=0.05)
 #pprint(c)
 #c=Coordinates("21:41:55.291+71:18:41.12", 0.05)
 #pprint(c.right_asc)
-c=getObjectsByParams(min_mag='5.0')
-pprint(len(c))
+#coords = '{{"rightAsc": "{}",  "declination": "{}","radius": {}}}'.format("21:41:55.29", "71:18:41.12", 0.05)
+#coords = Coordinates("21:41:55.291+71:18:41.12", 0.05)
+#print(coords)
+#c=getObjectsByParams(coordinates=coords)
+#pprint(c)
