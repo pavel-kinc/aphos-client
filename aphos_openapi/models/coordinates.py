@@ -36,12 +36,12 @@ def parse_radius(radius, radius_unit):
     return _Angle(str(radius) + radius_unit).degree
 
 
-print(Coordinates("20 54 05.689 -37 01 17.38",10, 'h', 'm'))
-print(Coordinates("20:54:05.689-37:01:17.38",0.05, 'h'))
-print(Coordinates("17h15-17d10m", 0.05))
-print(Coordinates("275d11m15.6954s+17d59m59.876s", 0.05))
-print(Coordinates("12.34567h-17.87654d", 0.05))
-print(Coordinates("350.123456d-17.33333d", 0.05))
-print(parse_radius(25, 's'))
-coords = Coordinates("20 54 05.689 -37 01 17.38", 0.05)
-print(coords)
+#print(Coordinates("20 54 05.689 -37 01 17.38",10, 'h', 'm'))
+#print(Coordinates("20:54:05.689-37:01:17.38",0.05, 'h'))
+#print(Coordinates("17h15-17d10m", 0.05))
+#print(Coordinates("275d11m15.6954s+17d59m59.876s", 0.05))
+#print(Coordinates("12.34567h-17.87654d", 0.05))
+#print(Coordinates("350.123456d-17.33333d", 0.05))
+#print(parse_radius(25, 's'))
+#coords = Coordinates("20 54 05.689 -37 01 17.38", 0.05)
+#print(coords)

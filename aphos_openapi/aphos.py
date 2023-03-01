@@ -2,6 +2,7 @@ from pprint import pprint
 
 import aphos_openapi
 from aphos_openapi.models.coordinates import Coordinates
+from aphos_openapi.models.graph_data import GraphData, DMD
 
 # Defining the host is optional and defaults to http://localhost:8009
 # See configuration.py for a list of all supported configuration parameters.
@@ -106,6 +107,7 @@ def setComparisonApertures(comparison, night: aphos_openapi.datetime.date, orig=
                 flux.deviation = ((orig_dev/getFloat(orig_ap))**2 + (ref_dev/getFloat(ref_ap))**2)**0.5
 
 
+
 def getFloat(string):
     try:
         return float(string)
@@ -121,18 +123,17 @@ def help():
 
 o=getObject("805-031770")
 #pprint(o)
-print(type(o))
-k=getObject("604-024734")
-k = getComparisonByIds("805-031770", "781-038863")  # not saturated
+#print(type(o))
+#k=getObject("604-024734")
+#k = getComparisonByIds("805-031770", "781-038863")  # not saturated
 #pprint(k)
-#k = getComparisonByIds("605-025126", "606-024588")  # not saturated
-#pprint(k)
-help()
-l = getComparisonByIds("805-031770", "807-030174")  # saturated
-pprint(l)
-date = aphos_openapi.datetime.date(2021,11, 6)
-setComparisonApertures(l, date, 9, 9)
-pprint(l)
+
+#help()
+#l = getComparisonByIds("805-031770", "807-030174")  # saturated
+#pprint(l)
+#date = aphos_openapi.datetime.date(2021,11, 6)
+#setComparisonApertures(l, date, 9, 9)
+#pprint(l)
 #pprint(c)
 #c = Coordinates(right_asc="21:41:55.291", declination="71:18:41.12", radius=0.05)
 #pprint(c)
@@ -143,3 +144,8 @@ pprint(l)
 #print(coords)
 #c=getObjectsByParams(coordinates=coords)
 #pprint(c)
+
+k = getComparisonByIds("605-025126", "606-024588")  # not saturated
+k = GraphData(k)
+pprint(k.data_list)
+
