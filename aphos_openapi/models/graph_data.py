@@ -4,7 +4,7 @@ import pprint as _pprint
 import csv as _csv
 import os as _os
 import matplotlib.pyplot as _plt
-import numpy as _np
+#import numpy as _np
 
 
 class GraphData:

@@ -5,9 +5,9 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="aphos_openapi",
-    version="0.0.6",
+    version="1.0.0",
     author="Pavel Kinc",
-    description="Test",
+    description="APhoS Python library for data representation",
     long_description=long_description,
     long_description_content_type="text/markdown",
     packages=setuptools.find_packages(),
@@ -20,6 +20,8 @@ setuptools.setup(
     python_requires='>=3.6',
     install_requires=[
         'urllib3>=1.25.3',
-        'python-dateutil'
+        'python-dateutil',
+        'matplotlib',
+        'astropy'
     ]
 )
