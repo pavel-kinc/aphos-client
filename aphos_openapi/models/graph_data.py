@@ -42,7 +42,8 @@ class GraphData:
         _plt.xlabel("Julian Date")
         _plt.ylabel("Magnitude")
         for a,b,c,u in self.data_list:
-            d.setdefault(u,[]).append((a,b,c))
+            key = u[0:15]
+            d.setdefault(key,[]).append((a,b,c))
         errs=[]
         for key, val in d.items():
             a,b,c = zip(*val)
