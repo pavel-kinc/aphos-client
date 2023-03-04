@@ -83,10 +83,12 @@ class GraphData:
         for key, val in d.items():
             time = _Time(key + _JD_SHRT_SUB, format='jd')
             a, b, c = zip(*val)
-            plt, = ax.plot(a, b, "o", label=time.strftime('%Y-%m-%d'))
+            t = time.strftime('%Y-%m-%d')
+            plt, = ax.plot(a, b, "o", label=t)
             plts.append(plt)
-            errs.append(ax.errorbar(a, b, yerr=c, fmt=" ", color="#1f77b4", visible=False))
-        legend = ax.legend(loc='upper left', title="First day of night", bbox_to_anchor=(1, 0, 0.07, 1))
+            errs.append(ax.errorbar(a, b, yerr=c, fmt=" ",label=t, color="#1f77b4", visible=False))
+        _, labels = ax.get_legend_handles_labels()
+        legend = ax.legend(plts, labels, loc='upper left', title="First day of night", bbox_to_anchor=(1, 0, 0.07, 1))
         if len(errs) > 10:
             scroll(fig, legend)
         box = deviations(_plt, ax, errs, plts, legend)

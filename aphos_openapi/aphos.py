@@ -169,13 +169,13 @@ o=getObject("805-031770")
 #c=getObjectsByParams(coordinates=coords)
 #pprint(c)
 
-#k = getComparisonByIds("605-025126", "606-024588")  # not saturated
+k = getComparisonByIds("607-023145", "607-024033")  # not saturated
+pprint(k)
+k = GraphData(k)
+k.to_file("./graphDataTest/data1.csv")
 #pprint(k)
-#k = GraphData(k)
-#k.to_file("./graphDataTest/data.csv")
-#pprint(k)
-#k = GraphData("./graphDataTest/data.csv")
-#k.composite_graph()
-#k.graph()
+k = GraphData("./graphDataTest/data1.csv")
+k.composite_graph()
+k.graph()
 #k.composite_graph()
 
