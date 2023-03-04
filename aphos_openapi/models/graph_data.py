@@ -21,16 +21,23 @@ class GraphData:
     def __init__(self, comparison, users=None, exclude=False, saturated=False):
         if type(comparison) != str:
             self.data_list = from_comparison(comparison, users, exclude, saturated)
+            info = [comparison.original.id, comparison.original.catalog,
+                    comparison.reference.id, comparison.reference.catalog]
         else:
-            self.data_list = from_file(comparison, users, exclude, saturated)
+            info, self.data_list = from_file(comparison, users, exclude, saturated)
+        self.original, self.orig_catalog, self.reference, self.ref_catalog = info
 
     def __repr__(self):
-        return _pprint.pformat(self.data_list)
+        return _pprint.pformat(self.__dict__)
 
     def to_file(self, path):
         _os.makedirs(_os.path.dirname(path), exist_ok=True)
         with open(path, 'w', newline='') as file:
             writer = _csv.writer(file, delimiter=' ')
+            writer.writerow(["Original ID", self.original])
+            writer.writerow(["Original Catalog", self.orig_catalog])
+            writer.writerow(["Reference ID", self.reference])
+            writer.writerow(["Reference Catalog", self.ref_catalog])
             for data in self.data_list:
                 writer.writerow(data)
 
@@ -38,7 +45,7 @@ class GraphData:
         d = dict()
         fig, ax = _plt.subplots(figsize=(11, 7))
         fig.subplots_adjust(right=0.8)
-        _plt.title("Light curve of Space object")
+        _plt.title(f"Light curve of {self.original} {self.orig_catalog} to {self.reference} {self.ref_catalog}")
         _plt.xlabel("Julian Date")
         _plt.ylabel("Magnitude")
         for a,b,c,u in self.data_list:
@@ -59,7 +66,8 @@ class GraphData:
     def composite_graph(self):
         d = dict()
         fig, ax = _plt.subplots(figsize=(11, 7))
-        _plt.title("Light curve of objects - compare nights")
+        _plt.title(f"Composed night light curve of {self.original} {self.orig_catalog} "
+                   f"to {self.reference} {self.ref_catalog}")
         _plt.xlabel("Julian Date - floating point")
         _plt.ylabel("Magnitude")
         fig.subplots_adjust(right=0.8)
@@ -114,10 +122,14 @@ def from_comparison(comparison: _Comp, users, exclude, saturated):
 
 
 def from_file(comparison,users, exclude, saturated):
+    info= []
     res = []
     with open(comparison, 'r', newline='') as file:
         reader = _csv.reader(file, delimiter=' ')
         for row in reader:
+            if len(row) < 3:
+                info.append(row[1])
+                continue
             if row[2] == float('-inf') and not saturated:
                 continue
             if users is not None:
@@ -127,7 +139,7 @@ def from_file(comparison,users, exclude, saturated):
                 else:
                     continue
             res.append(DMDU(float(row[0]), float(row[1]), float(row[2]), row[3]))
-    return res
+    return info, res
 
 
 def deviations(plot, ax, errors):
