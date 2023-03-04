@@ -22,7 +22,7 @@ class GraphData:
         if type(comparison) != str:
             self.data_list = from_comparison(comparison, users, exclude, saturated)
         else:
-            self.data_list = from_file(comparison, saturated)
+            self.data_list = from_file(comparison, users, exclude, saturated)
 
     def __repr__(self):
         return _pprint.pformat(self.data_list)
@@ -35,34 +35,42 @@ class GraphData:
                 writer.writerow(data)
 
     def graph(self):
-        a, b, c = zip(*self.data_list)
+        d = dict()
         fig, ax = _plt.subplots(figsize=(11, 7))
-        _plt.title("Light curve of star")
+        fig.subplots_adjust(right=0.8)
+        _plt.title("Light curve of Space object")
         _plt.xlabel("Julian Date")
         _plt.ylabel("Magnitude")
-        dot, = ax.plot(a, b, 'o', label="dot")
-        error = ax.errorbar(a, b, yerr=c, fmt=" ", label="error", ecolor="#1f77b4", visible=False)
-        box = deviations(_plt, ax, [error])
-        scroll(fig, box)
+        for a,b,c,u in self.data_list:
+            d.setdefault(u,[]).append((a,b,c))
+        errs=[]
+        for key, val in d.items():
+            a,b,c = zip(*val)
+            ax.plot(a, b, "o", label=key)
+            errs.append(ax.errorbar(a, b, yerr=c, fmt=" ", color="#1f77b4", visible=False))
+        box = deviations(_plt, ax, errs)
+        legend = ax.legend(loc='upper left', title="Username", bbox_to_anchor=(1, 0, 0.07, 1))
+        if len(errs) > 10:
+            scroll(fig, legend)
 
         _plt.show()
 
     def composite_graph(self):
         d = dict()
         fig, ax = _plt.subplots(figsize=(11, 7))
-        _plt.title("Light curve of star - compare nights")
+        _plt.title("Light curve of objects - compare nights")
         _plt.xlabel("Julian Date - floating point")
         _plt.ylabel("Magnitude")
         fig.subplots_adjust(right=0.8)
         errs = []
-        for a, b, c in self.data_list:
+        for a, b, c,_ in self.data_list:
             key = _math.floor(a)
             d.setdefault(key, []).append((a % 1, b, c))
         for key, val in d.items():
             time = _Time(key+_JD_SHRT_SUB, format='jd')
             a, b, c = zip(*val)
             ax.plot(a, b, "o", label=time.strftime('%Y-%m-%d'))
-            errs.append(ax.errorbar(a, b, yerr=c, fmt=" ",color="orange", visible=False))
+            errs.append(ax.errorbar(a, b, yerr=c, fmt=" ",color="#1f77b4", visible=False))
         legend = ax.legend(loc='upper left', title="First day of night", bbox_to_anchor=(1, 0, 0.07, 1))
         if len(errs) > 10:
             scroll(fig, legend)
@@ -70,14 +78,15 @@ class GraphData:
         _plt.show()
 
 
-class DMD:
-    def __init__(self, date, mag, dev):
+class DMDU:
+    def __init__(self, date, mag, dev, user):
         self.date = date
         self.magnitude = mag
         self.deviation = dev
+        self.user = user
 
     def __str__(self):
-        return f'{self.date}, {self.magnitude}, {self.deviation}'
+        return f'{self.date}, {self.magnitude}, {self.deviation}, {self.user}'
 
     def __repr__(self):
         return str(self)
@@ -99,23 +108,28 @@ def from_comparison(comparison: _Comp, users, exclude, saturated):
             else:
                 continue
         date = _Time(flux.exp_middle).jd - _JD_SHRT_SUB
-        res.append(DMD(date, flux.magnitude, flux.deviation))
+        res.append(DMDU(date, flux.magnitude, flux.deviation, flux.username))
     return res
 
 
-def from_file(comparison, saturated):
+def from_file(comparison,users, exclude, saturated):
     res = []
     with open(comparison, 'r', newline='') as file:
         reader = _csv.reader(file, delimiter=' ')
         for row in reader:
             if row[2] == float('-inf') and not saturated:
                 continue
-            res.append(DMD(float(row[0]), float(row[1]), float(row[2])))
+            if users is not None:
+                if row[3] in users:
+                    if exclude:
+                        continue
+                else:
+                    continue
+            res.append(DMDU(float(row[0]), float(row[1]), float(row[2]), row[3]))
     return res
 
 
 def deviations(plot, ax, errors):
-    # legend = _plt.legend(loc='upper right')
     button = plot.axes([0.01, 0.03, 0.18, 0.05], frameon=False)
     box = CheckButtons(button, ["show with deviations"], [False])
 

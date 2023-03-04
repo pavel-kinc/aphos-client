@@ -2,7 +2,7 @@ from pprint import pprint
 
 import aphos_openapi
 from aphos_openapi.models.coordinates import Coordinates
-from aphos_openapi.models.graph_data import GraphData, DMD
+from aphos_openapi.models.graph_data import GraphData, DMDU
 
 # Defining the host is optional and defaults to http://localhost:8009
 # See configuration.py for a list of all supported configuration parameters.
