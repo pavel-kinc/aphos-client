@@ -5,6 +5,9 @@ from astropy.coordinates import Angle as _Angle
 
 
 class Coordinates:
+    """
+    Coordinates class for working with coordinates,
+    """
     def __init__(self, coordinates, radius, default_unit='h', radius_unit='d'):
         self.rightAsc, self.declination = parse_coordinates(coordinates, default_unit)
         self.radius = parse_radius(radius, radius_unit)

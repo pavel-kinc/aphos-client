@@ -52,7 +52,6 @@ def getObjectsByParams(object_id=None, catalog=None, name=None, coordinates=None
                 if key in local_args and local_args[key] is not None:
                     if(key == 'coordinates'):
                         local_args[key] = str(local_args[key])
-                        print(local_args[key])
                     params[key] = local_args[key]
             return api_instance.find_space_objects_by_params(**params)
         except aphos_openapi.ApiException as e:
@@ -85,6 +84,16 @@ def getUser(username):
 
 
 def setComparisonApertures(comparison, night: aphos_openapi.datetime.date, orig=None, ref=None):
+    """
+    Sets apertures based on night and desired indexes in comparison object and
+    recalculates magnitude and deviation
+
+    Args:
+        comparison: ComparisonObject - object to which the apertures are set
+        night: Array of nights to which the apertures are changing
+        orig: target index of aperture to set (from original star)
+        ref: target index of aperture to set (from reference star)
+    """
     night_str = str(night.strftime("%d-%m-%Y"))
     for flux in comparison.data:
 
@@ -109,15 +118,30 @@ def setComparisonApertures(comparison, night: aphos_openapi.datetime.date, orig=
 
 
 def getFloat(string):
+    """
+    Function takes variable and returns float or None
+
+    Args:
+        string: string of float number
+
+    Returns: float number from string
+
+    """
     try:
         return float(string)
     except:
         return None
 
 def hello():
-    print("hello" + " aphos version " + aphos_openapi.pkg_resources.require("aphos_openapi")[0].version)
+    """
+    Prints basic info and version about APhoS and libraries
+    """
+    print("Hello" + " APhoS version: " + aphos_openapi.pkg_resources.require("aphos_openapi")[0].version)
 
 def help():
+    """
+    Prints useful documentation and info about this package usage
+    """
     print("""help -> README.md -> https://test.pypi.org/project/aphos-openapi/\nTODO""")
 
 
@@ -140,15 +164,18 @@ o=getObject("805-031770")
 #c=Coordinates("21:41:55.291+71:18:41.12", 0.05)
 #pprint(c.right_asc)
 #coords = '{{"rightAsc": "{}",  "declination": "{}","radius": {}}}'.format("21:41:55.29", "71:18:41.12", 0.05)
+
 #coords = Coordinates("21:41:55.291+71:18:41.12", 0.05)
-#print(coords)
 #c=getObjectsByParams(coordinates=coords)
 #pprint(c)
 
-#k = getComparisonByIds("605-025126", "606-024588")  # not saturated
-#k = GraphData(k)
-#k.to_file("./graphDataTest/data.csv")
-#pprint(k.data_list)
-#k = GraphData("./graphDataTest/data.csv")
-#k.graph()
+k = getComparisonByIds("605-025126", "606-024588")  # not saturated
+pprint(k)
+k = GraphData(k)
+k.to_file("./graphDataTest/data.csv")
+pprint(k.data_list)
+k = GraphData("./graphDataTest/data.csv")
+k.composite_graph()
+k.graph()
+k.composite_graph()
 
