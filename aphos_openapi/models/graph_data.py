@@ -16,7 +16,6 @@ import math as _math
 _JD_SHRT_SUB = 2400000
 
 
-
 class GraphData:
     def __init__(self, comparison, users=None, exclude=False, saturated=False):
         if type(comparison) != str:
@@ -48,18 +47,23 @@ class GraphData:
         _plt.title(f"Light curve of {self.original} {self.orig_catalog} to {self.reference} {self.ref_catalog}")
         _plt.xlabel("Julian Date")
         _plt.ylabel("Magnitude")
-        for a,b,c,u in self.data_list:
+        for a, b, c, u in self.data_list:
             key = u[0:15]
-            d.setdefault(key,[]).append((a,b,c))
-        errs=[]
+            d.setdefault(key, []).append((a, b, c))
+        errs = []
+        plts = []
         for key, val in d.items():
-            a,b,c = zip(*val)
-            ax.plot(a, b, "o", label=key)
-            errs.append(ax.errorbar(a, b, yerr=c, fmt=" ", color="#1f77b4", visible=False))
-        box = deviations(_plt, ax, errs)
-        legend = ax.legend(loc='upper left', title="Username", bbox_to_anchor=(1, 0, 0.07, 1))
+            a, b, c = zip(*val)
+            plt, = ax.plot(a, b, "o", label=key)
+            plts.append(plt)
+            errs.append(ax.errorbar(a, b, yerr=c, fmt=" ", label=key, color="#1f77b4", visible=False))
+        _, labels = ax.get_legend_handles_labels()
+        legend = ax.legend(plts, labels, loc='upper left', title="Username", bbox_to_anchor=(1, 0, 0.07, 1))
+        box = deviations(_plt, ax, errs, plts, legend)
+
         if len(errs) > 10:
             scroll(fig, legend)
+        toggle_legend(legend, plts, errs)
 
         _plt.show()
 
@@ -72,18 +76,21 @@ class GraphData:
         _plt.ylabel("Magnitude")
         fig.subplots_adjust(right=0.8)
         errs = []
-        for a, b, c,_ in self.data_list:
+        plts = []
+        for a, b, c, _ in self.data_list:
             key = _math.floor(a)
             d.setdefault(key, []).append((a % 1, b, c))
         for key, val in d.items():
-            time = _Time(key+_JD_SHRT_SUB, format='jd')
+            time = _Time(key + _JD_SHRT_SUB, format='jd')
             a, b, c = zip(*val)
-            ax.plot(a, b, "o", label=time.strftime('%Y-%m-%d'))
-            errs.append(ax.errorbar(a, b, yerr=c, fmt=" ",color="#1f77b4", visible=False))
+            plt, = ax.plot(a, b, "o", label=time.strftime('%Y-%m-%d'))
+            plts.append(plt)
+            errs.append(ax.errorbar(a, b, yerr=c, fmt=" ", color="#1f77b4", visible=False))
         legend = ax.legend(loc='upper left', title="First day of night", bbox_to_anchor=(1, 0, 0.07, 1))
         if len(errs) > 10:
             scroll(fig, legend)
-        box = deviations(_plt, ax, errs)
+        box = deviations(_plt, ax, errs, plts, legend)
+        toggle_legend(legend, plts, errs)
         _plt.show()
 
 
@@ -121,8 +128,8 @@ def from_comparison(comparison: _Comp, users, exclude, saturated):
     return res
 
 
-def from_file(comparison,users, exclude, saturated):
-    info= []
+def from_file(comparison, users, exclude, saturated):
+    info = []
     res = []
     with open(comparison, 'r', newline='') as file:
         reader = _csv.reader(file, delimiter=' ')
@@ -142,18 +149,23 @@ def from_file(comparison,users, exclude, saturated):
     return info, res
 
 
-def deviations(plot, ax, errors):
+def deviations(plot, ax, errors, plts, legend):
     button = plot.axes([0.01, 0.03, 0.18, 0.05], frameon=False)
     box = CheckButtons(button, ["show with deviations"], [False])
 
     def set_devs(label):
+        for plt in plts:
+            plt.set_visible(True)
+        for a in legend.get_lines():
+            a.set_visible(True)
         for error in errors:
             for bar in error.lines[2]:
-                bar.set_visible(not bar.get_visible())
+                bar.set_visible(box.get_status()[0])
             plot.draw()
 
     box.on_clicked(set_devs)
     return box
+
 
 def scroll(fig, legend):
     d = {"down": 40, "up": -40}
@@ -167,3 +179,28 @@ def scroll(fig, legend):
             fig.canvas.draw_idle()
 
     fig.canvas.mpl_connect("scroll_event", legend_scroll)
+
+
+def toggle_legend(legend, plts, errs):
+    for leg in legend.get_lines():
+        leg.set_picker(True)
+        leg.set_pickradius(10)
+
+    def on_leg_click(event):
+        a = event.artist
+        label = a.get_label()
+        visible = False
+        for plt in plts:
+            if plt.get_label() == label:
+                visible = plt.get_visible()
+                plt.set_visible(not visible)
+        for err in errs:
+            if err.get_label() == label:
+                for bar in err.lines[2]:
+                    bar.set_visible(False)
+
+        a.set_visible(not a.get_visible())
+
+        _plt.draw()
+
+    _plt.connect("pick_event", on_leg_click)
