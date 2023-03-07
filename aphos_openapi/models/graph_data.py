@@ -10,11 +10,8 @@ import matplotlib.pyplot as _plt
 from matplotlib.widgets import CheckButtons
 import math as _math
 
+
 # import numpy as _np
-
-
-_JD_SHRT_SUB = 2400000
-
 
 class GraphData:
     def __init__(self, comparison, users=None, exclude=False, saturated=False):
@@ -81,12 +78,12 @@ class GraphData:
             key = _math.floor(a)
             d.setdefault(key, []).append((a % 1, b, c))
         for key, val in d.items():
-            time = _Time(key + _JD_SHRT_SUB, format='jd')
+            time = _Time(key, format='jd')
             a, b, c = zip(*val)
             t = time.strftime('%Y-%m-%d')
             plt, = ax.plot(a, b, "o", label=t)
             plts.append(plt)
-            errs.append(ax.errorbar(a, b, yerr=c, fmt=" ",label=t, color="#1f77b4", visible=False))
+            errs.append(ax.errorbar(a, b, yerr=c, fmt=" ", label=t, color="#1f77b4", visible=False))
         _, labels = ax.get_legend_handles_labels()
         legend = ax.legend(plts, labels, loc='upper left', title="First day of night", bbox_to_anchor=(1, 0, 0.07, 1))
         if len(errs) > 10:
@@ -98,9 +95,9 @@ class GraphData:
 
 class DMDU:
     def __init__(self, date, mag, dev, user):
-        self.date = date
-        self.magnitude = mag
-        self.deviation = dev
+        self.date = round(date, 7)
+        self.magnitude = round(mag, 4)
+        self.deviation = round(dev, 4)
         self.user = user
 
     def __str__(self):
@@ -125,7 +122,7 @@ def from_comparison(comparison: _Comp, users, exclude, saturated):
                     continue
             else:
                 continue
-        date = _Time(flux.exp_middle).jd - _JD_SHRT_SUB
+        date = _Time(flux.exp_middle).jd
         res.append(DMDU(date, flux.magnitude, flux.deviation, flux.username))
     return res
 
@@ -146,7 +143,8 @@ def from_file(comparison, users, exclude, saturated):
                     if exclude:
                         continue
                 else:
-                    continue
+                    if not exclude:
+                        continue
             res.append(DMDU(float(row[0]), float(row[1]), float(row[2]), row[3]))
     return info, res
 

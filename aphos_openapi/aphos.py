@@ -158,18 +158,23 @@ def help():
     """
     Prints useful documentation and info about this package usage
     """
-    print("""help -> README.md -> https://test.pypi.org/project/aphos-openapi/\nTODO""")
+    print("""help -> README.md -> https://test.pypi.org/project/aphos-openapi/\n""")
 
 
-#o = getObject("805-031770")
-# pprint(o)
+o = getObject("604-024863")
+pprint(o)
 # print(type(o))
 # k=getObject("604-024734")
 # k = getComparisonByIds("805-031770", "781-038863")  # not saturated
 # pprint(k)
 
 # help()
-# l = getComparisonByIds("805-031770", "807-030174")  # saturated
+#l = getComparisonByIds("805-031770", "807-030174")  # saturated
+#setComparisonApertures(l, aphos_openapi.datetime.date(2021,11, 6),5,5)
+#print(l)
+#g = GraphData(l,users=["xkrutak"], exclude=True,saturated=True)
+#g.graph()
+#print(g)
 # pprint(l)
 # date = aphos_openapi.datetime.date(2021,11, 6)
 # setComparisonApertures(l, date, 9, 9)
@@ -177,24 +182,30 @@ def help():
 # pprint(c)
 # c = Coordinates(right_asc="21:41:55.291", declination="71:18:41.12", radius=0.05)
 # pprint(c)
-# c=Coordinates("21:41:55.291+71:18:41.12", 0.05)
-# pprint(c.right_asc)
-# coords = '{{"rightAsc": "{}",  "declination": "{}","radius": {}}}'.format("21:41:55.29", "71:18:41.12", 0.05)
 
-# coords = Coordinates("21:41:55.291+71:18:41.12", 0.05)
-# c=getObjectsByParams(coordinates=coords)
-# pprint(c)
+#coords = Coordinates("21h41m55.291s +71d18m41.12s", 10, 'h', 'm')
+#print(coords)
+#c=getObjectsByParams(coordinates=coords)
+#pprint(c)
 
-#k = getComparisonByIds("607-023145", "607-024033")  # not saturated
+#k = getComparisonByIds("607-023145", "607-024033", "UCAC4", "UCAC4")  # not saturated
+#print(k)
+#VarCmp getvarcmpbyids
+# VAR vs CMP (orig vs ref)
 #pprint(k)
-#k = GraphData(k)
-#k.to_file("./graphDataTest/data1.csv")
+#date = aphos_openapi.datetime.date(2022,3, 22)
+#setComparisonApertures(k, date, 5, 5)
+#print(k)
+#k = GraphData(k, users=["xkrutak"], exclude=False, saturated=False)
+#print(k)
+#k.to_file("./graphDataTest/data3.csv")
 # pprint(k)
-#k = GraphData("./graphDataTest/data1.csv")
+#k = GraphData("./graphDataTest/data2.csv", users=["xkinc", "xsmth", "pepa"], exclude=True)
+#print(k)
 #k.composite_graph()
 #k.graph()
 # k.composite_graph()
 
 #print(resolveNameAPhoS("USNO-B1.0 1211-0102048"))
-#print(resolveNameAPhoS("2MASS J05483801+3116474"))
+#print(resolveNameAPhoS("SKY# 9445")[0].declination)
 
