@@ -1,14 +1,16 @@
 from pprint import pprint
+from typing import Optional, List
 
 import aphos_openapi
 from aphos_openapi.models.coordinates import Coordinates
-from aphos_openapi.models.graph_data import GraphData, DMDU
+from aphos_openapi.models.graph_data import GraphData
+from astropy.coordinates import SkyCoord as _SkyCoord
 
 # Defining the host is optional and defaults to http://localhost:8009
 # See configuration.py for a list of all supported configuration parameters.
 configuration = aphos_openapi.Configuration(
     host="https://ip-147-251-21-104.flt.cloud.muni.cz/"
-    #host="http://localhost:8009"
+    # host="http://localhost:8009"
 )
 
 default_catalog = "UCAC4"
@@ -50,7 +52,7 @@ def getObjectsByParams(object_id=None, catalog=None, name=None, coordinates=None
             local_args = locals().copy()
             for key in aphos_openapi.getcallargs(getObjectsByParams).keys():
                 if key in local_args and local_args[key] is not None:
-                    if(key == 'coordinates'):
+                    if (key == 'coordinates'):
                         local_args[key] = str(local_args[key])
                     params[key] = local_args[key]
             return api_instance.find_space_objects_by_params(**params)
@@ -113,8 +115,20 @@ def setComparisonApertures(comparison, night: aphos_openapi.datetime.date, orig=
                 flux.magnitude = -2.5 * aphos_openapi.math.log(getFloat(orig_ap) / getFloat(ref_ap), 10)
                 orig_dev = flux.aperture_devs[orig] if orig is not None else flux.ap_auto_dev
                 ref_dev = flux.ref_aperture_devs[ref] if ref is not None else flux.ref_ap_auto_dev
-                flux.deviation = ((orig_dev/getFloat(orig_ap))**2 + (ref_dev/getFloat(ref_ap))**2)**0.5
+                flux.deviation = ((orig_dev / getFloat(orig_ap)) ** 2 + (ref_dev / getFloat(ref_ap)) ** 2) ** 0.5
 
+
+def resolveNameAPhoS(name: str) -> Optional[List[aphos_openapi.models.SpaceObject]]:
+    try:
+        c = _SkyCoord.from_name(name)
+    except:
+        return None
+    coord = Coordinates(c, 1, radius_unit='s')
+    res = getObjectsByParams(coordinates=coord)
+    if len(res) == 0:
+        coord = Coordinates(c, 3, radius_unit='s')
+        res = getObjectsByParams(coordinates=coord)
+    return res
 
 
 def getFloat(string):
@@ -132,11 +146,13 @@ def getFloat(string):
     except:
         return None
 
+
 def hello():
     """
     Prints basic info and version about APhoS and libraries
     """
     print("Hello" + " APhoS version: " + aphos_openapi.pkg_resources.require("aphos_openapi")[0].version)
+
 
 def help():
     """
@@ -145,37 +161,40 @@ def help():
     print("""help -> README.md -> https://test.pypi.org/project/aphos-openapi/\nTODO""")
 
 
-o=getObject("805-031770")
-#pprint(o)
-#print(type(o))
-#k=getObject("604-024734")
-#k = getComparisonByIds("805-031770", "781-038863")  # not saturated
+o = getObject("805-031770")
+# pprint(o)
+# print(type(o))
+# k=getObject("604-024734")
+# k = getComparisonByIds("805-031770", "781-038863")  # not saturated
+# pprint(k)
+
+# help()
+# l = getComparisonByIds("805-031770", "807-030174")  # saturated
+# pprint(l)
+# date = aphos_openapi.datetime.date(2021,11, 6)
+# setComparisonApertures(l, date, 9, 9)
+# pprint(l)
+# pprint(c)
+# c = Coordinates(right_asc="21:41:55.291", declination="71:18:41.12", radius=0.05)
+# pprint(c)
+# c=Coordinates("21:41:55.291+71:18:41.12", 0.05)
+# pprint(c.right_asc)
+# coords = '{{"rightAsc": "{}",  "declination": "{}","radius": {}}}'.format("21:41:55.29", "71:18:41.12", 0.05)
+
+# coords = Coordinates("21:41:55.291+71:18:41.12", 0.05)
+# c=getObjectsByParams(coordinates=coords)
+# pprint(c)
+
+#k = getComparisonByIds("607-023145", "607-024033")  # not saturated
 #pprint(k)
-
-#help()
-#l = getComparisonByIds("805-031770", "807-030174")  # saturated
-#pprint(l)
-#date = aphos_openapi.datetime.date(2021,11, 6)
-#setComparisonApertures(l, date, 9, 9)
-#pprint(l)
-#pprint(c)
-#c = Coordinates(right_asc="21:41:55.291", declination="71:18:41.12", radius=0.05)
-#pprint(c)
-#c=Coordinates("21:41:55.291+71:18:41.12", 0.05)
-#pprint(c.right_asc)
-#coords = '{{"rightAsc": "{}",  "declination": "{}","radius": {}}}'.format("21:41:55.29", "71:18:41.12", 0.05)
-
-#coords = Coordinates("21:41:55.291+71:18:41.12", 0.05)
-#c=getObjectsByParams(coordinates=coords)
-#pprint(c)
-
-k = getComparisonByIds("607-023145", "607-024033")  # not saturated
-pprint(k)
-k = GraphData(k)
-k.to_file("./graphDataTest/data1.csv")
-#pprint(k)
-k = GraphData("./graphDataTest/data1.csv")
-k.composite_graph()
-k.graph()
+#k = GraphData(k)
+#k.to_file("./graphDataTest/data1.csv")
+# pprint(k)
+#k = GraphData("./graphDataTest/data1.csv")
 #k.composite_graph()
+#k.graph()
+# k.composite_graph()
+
+#print(resolveNameAPhoS("USNO-B1.0 1211-0102048"))
+#print(resolveNameAPhoS("2MASS J05483801+3116474"))
 
