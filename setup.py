@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="aphos_openapi",
-    version="1.1.2",
+    version="1.2.2",
     author="Pavel Kinc",
     description="APhoS Python library for data representation",
     long_description=long_description,

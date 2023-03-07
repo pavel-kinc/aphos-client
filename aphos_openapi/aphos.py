@@ -161,7 +161,7 @@ def help():
     print("""help -> README.md -> https://test.pypi.org/project/aphos-openapi/\nTODO""")
 
 
-o = getObject("805-031770")
+#o = getObject("805-031770")
 # pprint(o)
 # print(type(o))
 # k=getObject("604-024734")
