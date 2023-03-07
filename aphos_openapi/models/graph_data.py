@@ -44,7 +44,7 @@ class GraphData:
         fig, ax = _plt.subplots(figsize=(11, 7))
         fig.subplots_adjust(right=0.8)
         _plt.title(f"Light curve of {self.original} {self.orig_catalog} to {self.reference} {self.ref_catalog}")
-        _plt.xlabel("Julian Date")
+        _plt.xlabel("Julian Date (JD)")
         _plt.ylabel("Magnitude")
         for a, b, c, u in self.data_list:
             key = u[0:15]
@@ -71,7 +71,7 @@ class GraphData:
         fig, ax = _plt.subplots(figsize=(11, 7))
         _plt.title(f"Composed night light curve of {self.original} {self.orig_catalog} "
                    f"to {self.reference} {self.ref_catalog}")
-        _plt.xlabel("Julian Date - compressed")
+        _plt.xlabel("Julian Date (JD) - compressed")
         _plt.ylabel("Magnitude")
         fig.subplots_adjust(right=0.8)
         errs = []
