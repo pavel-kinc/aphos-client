@@ -10,8 +10,8 @@ import matplotlib.pyplot as _plt
 from matplotlib.widgets import CheckButtons
 import math as _math
 
-
 _COMPR_JDATE_MAX = 0.06
+
 
 # import numpy as _np
 
@@ -80,33 +80,32 @@ class GraphData:
         if len(my_list) == 0:
             return
         curr_min = 0
-        curr= my_list[0].date
-        a=[]
-        b=[]
-        c=[]
-        for x,y,z,_ in my_list:
-            if curr+_COMPR_JDATE_MAX < x:
+        curr = my_list[0].date
+        a = []
+        b = []
+        c = []
+        for x, y, z, _ in my_list:
+            if curr + _COMPR_JDATE_MAX < x:
                 _plt.axvline(x=curr_min, linewidth=0.5, color="black")
                 curr_min = curr_min + _COMPR_JDATE_MAX
-                _plt.axvline(x=curr_min, linewidth=0.5,color="black")
+                _plt.axvline(x=curr_min, linewidth=0.5, color="black")
             else:
                 curr_min = curr_min + (x - curr)
-            curr=x
+            curr = x
             a.append(curr_min)
             b.append(y)
             c.append(z)
 
-        #print(my_list)
-        plt, = ax.plot(a,b,"o")
+        # print(my_list)
+        plt, = ax.plot(a, b, "o")
         errs.append(ax.errorbar(a, b, yerr=c, fmt=" ", color="#1f77b4", visible=False))
-        #_, labels = ax.get_legend_handles_labels()
-        #legend = ax.legend(plts, labels, loc='upper left', title="First day of night", bbox_to_anchor=(1, 0, 0.07, 1))
-        #if len(errs) > 10:
+        # _, labels = ax.get_legend_handles_labels()
+        # legend = ax.legend(plts, labels, loc='upper left', title="First day of night", bbox_to_anchor=(1, 0, 0.07, 1))
+        # if len(errs) > 10:
         #    scroll(fig, legend)
         box = deviations(_plt, ax, errs, [plt], None)
-        #toggle_legend(legend, plts, errs)
+        # toggle_legend(legend, plts, errs)
         _plt.show()
-
 
     def phase_graph(self, moment, period):
         fig, ax = _plt.subplots(figsize=(11, 7))
@@ -115,12 +114,12 @@ class GraphData:
         _plt.xlabel("Phase")
         _plt.ylabel("Magnitude")
         fig.subplots_adjust(right=0.8)
-        a=[]
-        b=[]
-        c=[]
-        errs=[]
-        for x,y,z,_ in self.data_list:
-            a.append(((x-moment)/period)%1)
+        a = []
+        b = []
+        c = []
+        errs = []
+        for x, y, z, _ in self.data_list:
+            a.append(((x - moment) / period) % 1)
             b.append(y)
             c.append(z)
         plt, = ax.plot(a, b, "o")

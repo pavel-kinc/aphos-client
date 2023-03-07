@@ -188,7 +188,7 @@ def help():
 #c=getObjectsByParams(coordinates=coords)
 #pprint(c)
 
-k = getComparisonByIds("605-025126", "604-024943", "UCAC4", "UCAC4")  # not saturated
+#k = getComparisonByIds("605-025126", "604-024943", "UCAC4", "UCAC4")  # not saturated
 #print(k)
 #VarCmp getvarcmpbyids
 # VAR vs CMP (orig vs ref)
@@ -196,17 +196,17 @@ k = getComparisonByIds("605-025126", "604-024943", "UCAC4", "UCAC4")  # not satu
 #date = aphos_openapi.datetime.date(2022,3, 22)
 #setComparisonApertures(k, date, 5, 5)
 #print(k)
-k = GraphData(k, users=["xkrutak"], exclude=False, saturated=False)
+#k = GraphData(k, users=["xkrutak"], exclude=False, saturated=False)
 #print(k)
 #k.to_file("./graphDataTest/data4.csv")
 # pprint(k)
-#k = GraphData("./graphDataTest/data2.csv")
+k = GraphData("./graphDataTest/data4.csv")
 #print(k)
 #k.composite_graph()
 #print(Coordinates(_SkyCoord.from_name("UCAC4 604-024937"),0.05))
-#k.phase_graph(2459586.5244213, 0.4)
-#k.graph()
-#k.composite_graph()
+k.phase_graph(2455957.5, 1.209373)
+k.graph()
+k.composite_graph()
 
 #print(resolveNameAPhoS("USNO-B1.0 1211-0102048"))
 #print(resolveNameAPhoS("SKY# 9445")[0].declination)
