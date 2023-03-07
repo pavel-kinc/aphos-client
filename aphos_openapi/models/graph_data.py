@@ -11,6 +11,8 @@ from matplotlib.widgets import CheckButtons
 import math as _math
 
 
+_COMPR_JDATE_MAX = 0.06
+
 # import numpy as _np
 
 class GraphData:
@@ -69,27 +71,61 @@ class GraphData:
         fig, ax = _plt.subplots(figsize=(11, 7))
         _plt.title(f"Composed night light curve of {self.original} {self.orig_catalog} "
                    f"to {self.reference} {self.ref_catalog}")
-        _plt.xlabel("Julian Date - floating point")
+        _plt.xlabel("Julian Date - compressed")
         _plt.ylabel("Magnitude")
         fig.subplots_adjust(right=0.8)
         errs = []
         plts = []
-        for a, b, c, _ in self.data_list:
-            key = _math.floor(a)
-            d.setdefault(key, []).append((a % 1, b, c))
-        for key, val in d.items():
-            time = _Time(key, format='jd')
-            a, b, c = zip(*val)
-            t = time.strftime('%Y-%m-%d')
-            plt, = ax.plot(a, b, "o", label=t)
-            plts.append(plt)
-            errs.append(ax.errorbar(a, b, yerr=c, fmt=" ", label=t, color="#1f77b4", visible=False))
-        _, labels = ax.get_legend_handles_labels()
-        legend = ax.legend(plts, labels, loc='upper left', title="First day of night", bbox_to_anchor=(1, 0, 0.07, 1))
-        if len(errs) > 10:
-            scroll(fig, legend)
-        box = deviations(_plt, ax, errs, plts, legend)
-        toggle_legend(legend, plts, errs)
+        my_list = sorted(self.data_list, key=lambda x: x.date)
+        if len(my_list) == 0:
+            return
+        curr_min = 0
+        curr= my_list[0].date
+        a=[]
+        b=[]
+        c=[]
+        for x,y,z,_ in my_list:
+            if curr+_COMPR_JDATE_MAX < x:
+                _plt.axvline(x=curr_min, linewidth=0.5, color="black")
+                curr_min = curr_min + _COMPR_JDATE_MAX
+                _plt.axvline(x=curr_min, linewidth=0.5,color="black")
+            else:
+                curr_min = curr_min + (x - curr)
+            curr=x
+            a.append(curr_min)
+            b.append(y)
+            c.append(z)
+
+        #print(my_list)
+        plt, = ax.plot(a,b,"o")
+        errs.append(ax.errorbar(a, b, yerr=c, fmt=" ", color="#1f77b4", visible=False))
+        #_, labels = ax.get_legend_handles_labels()
+        #legend = ax.legend(plts, labels, loc='upper left', title="First day of night", bbox_to_anchor=(1, 0, 0.07, 1))
+        #if len(errs) > 10:
+        #    scroll(fig, legend)
+        box = deviations(_plt, ax, errs, [plt], None)
+        #toggle_legend(legend, plts, errs)
+        _plt.show()
+
+
+    def phase_graph(self, moment, period):
+        fig, ax = _plt.subplots(figsize=(11, 7))
+        _plt.title(f"Phase graph of {self.original} {self.orig_catalog} "
+                   f"to {self.reference} {self.ref_catalog}")
+        _plt.xlabel("Phase")
+        _plt.ylabel("Magnitude")
+        fig.subplots_adjust(right=0.8)
+        a=[]
+        b=[]
+        c=[]
+        errs=[]
+        for x,y,z,_ in self.data_list:
+            a.append(((x-moment)/period)%1)
+            b.append(y)
+            c.append(z)
+        plt, = ax.plot(a, b, "o")
+        errs.append(ax.errorbar(a, b, yerr=c, fmt=" ", color="#1f77b4", visible=False))
+        box = deviations(_plt, ax, errs, [plt], None)
         _plt.show()
 
 
@@ -156,8 +192,9 @@ def deviations(plot, ax, errors, plts, legend):
     def set_devs(label):
         for plt in plts:
             plt.set_visible(True)
-        for a in legend.get_lines():
-            a.set_visible(True)
+        if legend is not None:
+            for a in legend.get_lines():
+                a.set_visible(True)
         for error in errors:
             for bar in error.lines[2]:
                 bar.set_visible(box.get_status()[0])

@@ -33,10 +33,8 @@ from aphos_openapi.exceptions import ApiAttributeError
 def lazy_import():
     from aphos_openapi.model.flux import Flux
     from aphos_openapi.model.space_object import SpaceObject
-    from aphos_openapi.model.space_object_with_fluxes_all_of import SpaceObjectWithFluxesAllOf
     globals()['Flux'] = Flux
     globals()['SpaceObject'] = SpaceObject
-    globals()['SpaceObjectWithFluxesAllOf'] = SpaceObjectWithFluxesAllOf
 
 
 class SpaceObjectWithFluxes(ModelComposed):
@@ -346,7 +344,6 @@ class SpaceObjectWithFluxes(ModelComposed):
           ],
           'allOf': [
               SpaceObject,
-              SpaceObjectWithFluxesAllOf,
           ],
           'oneOf': [
           ],
