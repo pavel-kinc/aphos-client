@@ -4,7 +4,7 @@ All URIs are relative to *http://localhost:8009*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**get_catalogs**](CatalogApi.md#get_catalogs) | **GET** /api/user/getCatalogs | Find all catalogs
+[**get_catalogs**](CatalogApi.md#get_catalogs) | **GET** /api/catalog/getCatalogs | Find all catalogs
 
 
 # **get_catalogs**
@@ -68,6 +68,7 @@ No authorization required
 |-------------|-------------|------------------|
 **200** | Successful operation |  -  |
 **400** | Error |  -  |
+**500** | Internal server error |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

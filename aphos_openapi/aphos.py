@@ -9,8 +9,8 @@ from astropy.coordinates import SkyCoord as _SkyCoord
 # Defining the host is optional and defaults to http://localhost:8009
 # See configuration.py for a list of all supported configuration parameters.
 configuration = aphos_openapi.Configuration(
-    host="https://ip-147-251-21-104.flt.cloud.muni.cz/"
-    #host="http://localhost:8009"
+    #host="https://ip-147-251-21-104.flt.cloud.muni.cz/"
+    host="http://localhost:8009"
 )
 
 default_catalog = "UCAC4"
@@ -200,14 +200,18 @@ def help():
 #print(k)
 #k.to_file("./graphDataTest/data4.csv")
 # pprint(k)
-k = GraphData("./graphDataTest/data4.csv")
+#k = GraphData("./graphDataTest/data4.csv")
 #print(k)
 #k.composite_graph()
 #print(Coordinates(_SkyCoord.from_name("UCAC4 604-024937"),0.05))
-k.phase_graph(2455957.5, 1.209373)
-k.graph()
-k.composite_graph()
+#k.phase_graph(2455957.5, 1.209373)
+#k.graph()
+#k.composite_graph()
 
 #print(resolveNameAPhoS("USNO-B1.0 1211-0102048"))
 #print(resolveNameAPhoS("SKY# 9445")[0].declination)
+c = getObjectsByParams(coordinates=Coordinates("21h41m55.291s +71d18m41.12s", 0.05, 'h', 'd'))
 
+l = getComparisonByIds("805-031770", "807-030174")  # saturated
+pprint(l)
+pprint(getUser("kekw"))

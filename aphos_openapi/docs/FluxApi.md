@@ -6,6 +6,7 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**get_comparison_by_identificators**](FluxApi.md#get_comparison_by_identificators) | **GET** /api/spaceObject/comparison | Comparison object of 2 SpaceObjects
 [**get_space_object_by_id**](FluxApi.md#get_space_object_by_id) | **GET** /api/spaceObject/find | Find space object by ID and catalog
+[**upload_csv**](FluxApi.md#upload_csv) | **POST** /api/spaceObject/upload_file | Upload file
 
 
 # **get_comparison_by_identificators**
@@ -38,8 +39,8 @@ with aphos_openapi.ApiClient() as api_client:
     api_instance = flux_api.FluxApi(api_client)
     original_id = "originalId_example" # str | ID of space object to return
     reference_id = "referenceId_example" # str | ID of space object to return
-    original_cat = "UCAC4" # str | Catalog of space object to return (optional)
-    reference_cat = "UCAC4" # str | Catalog of space object to return (optional)
+    original_cat = "All catalogues" # str | Catalog of space object to return (optional)
+    reference_cat = "All catalogues" # str | Catalog of space object to return (optional)
 
     # example passing only required values which don't have defaults set
     try:
@@ -88,8 +89,9 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Successful operation |  -  |
-**404** | Space object not found |  -  |
 **400** | Invalid catalogs or ID supplied |  -  |
+**404** | Space object not found |  -  |
+**500** | Internal server error |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -122,7 +124,7 @@ with aphos_openapi.ApiClient() as api_client:
     # Create an instance of the API class
     api_instance = flux_api.FluxApi(api_client)
     space_object_id = "spaceObjectId_example" # str | ID of space object to return
-    catalog = "UCAC4" # str | Catalog of space object to return   Default is UCAC4 (optional)
+    catalog = "All catalogues" # str | Catalog of space object to return   Default is UCAC4 (optional)
 
     # example passing only required values which don't have defaults set
     try:
@@ -168,9 +170,79 @@ No authorization required
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**404** | Space object not found |  -  |
 **400** | Invalid catalog or ID supplied |  -  |
+**404** | Space object not found |  -  |
 **200** | Successful operation |  -  |
+**500** | Internal server error |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **upload_csv**
+> str upload_csv(file)
+
+Upload file
+
+uploads file
+
+### Example
+
+
+```python
+import time
+import aphos_openapi
+from aphos_openapi.api import flux_api
+from aphos_openapi.model.error_message import ErrorMessage
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:8009
+# See configuration.py for a list of all supported configuration parameters.
+configuration = aphos_openapi.Configuration(
+    host = "http://localhost:8009"
+)
+
+
+# Enter a context with an instance of the API client
+with aphos_openapi.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = flux_api.FluxApi(api_client)
+    file = open('/path/to/file', 'rb') # file_type | 
+
+    # example passing only required values which don't have defaults set
+    try:
+        # Upload file
+        api_response = api_instance.upload_csv(file)
+        pprint(api_response)
+    except aphos_openapi.ApiException as e:
+        print("Exception when calling FluxApi->upload_csv: %s\n" % e)
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **file** | **file_type**|  |
+
+### Return type
+
+**str**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: multipart/form-data
+ - **Accept**: */*
+
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**400** | Invalid file |  -  |
+**200** | Successful operation |  -  |
+**500** | Internal server error |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
