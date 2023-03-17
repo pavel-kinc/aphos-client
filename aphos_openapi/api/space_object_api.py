@@ -26,6 +26,7 @@ from aphos_openapi.model.comparison_object import ComparisonObject
 from aphos_openapi.model.error_message import ErrorMessage
 from aphos_openapi.model.space_object import SpaceObject
 from aphos_openapi.model.space_object_with_fluxes import SpaceObjectWithFluxes
+from aphos_openapi.models.coordinates import Coordinates
 
 
 class SpaceObjectApi(object):
@@ -95,11 +96,11 @@ class SpaceObjectApi(object):
                     'name':
                         (str,),
                     'coordinates':
-                        (str,),
+                        (str,Coordinates,),
                     'min_mag':
-                        (float,),
+                        (float,str,),
                     'max_mag':
-                        (float,),
+                        (float,str,),
                 },
                 'attribute_map': {
                     'object_id': 'objectId',

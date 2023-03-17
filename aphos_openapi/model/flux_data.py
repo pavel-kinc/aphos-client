@@ -94,8 +94,8 @@ class FluxData(ModelNormal):
             'ap_auto_dev': (float,),  # noqa: E501
             'apertures': ([str],),  # noqa: E501
             'aperture_devs': ([float],),  # noqa: E501
-            'magnitude': (float,),  # noqa: E501
-            'deviation': (float,),  # noqa: E501
+            'magnitude': (float,str,),  # noqa: E501
+            'deviation': (float,type(None),),  # noqa: E501
             'username': (str,),  # noqa: E501
             'night': (Night,),  # noqa: E501
             'exp_middle': (str,),  # noqa: E501
@@ -239,6 +239,8 @@ class FluxData(ModelNormal):
                         self.additional_properties_type is None:
                 # discard variable.
                 continue
+            if var_name == "magnitude" and type(var_value) == str:
+                var_value = float('-inf')
             setattr(self, var_name, var_value)
         return self
 

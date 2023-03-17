@@ -9,8 +9,8 @@ from astropy.coordinates import SkyCoord as _SkyCoord
 # Defining the host is optional and defaults to http://localhost:8009
 # See configuration.py for a list of all supported configuration parameters.
 configuration = aphos_openapi.Configuration(
-    #host="https://ip-147-251-21-104.flt.cloud.muni.cz/"
-    host="http://localhost:8009"
+    host="https://ip-147-251-21-104.flt.cloud.muni.cz/"
+    #host="http://localhost:8009"
 )
 
 default_catalog = "UCAC4"

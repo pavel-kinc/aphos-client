@@ -7,9 +7,8 @@ Name | Type | Description | Notes
 **first_date_of_the_night** | **str** |  | 
 **second_date_of_the_night** | **str** |  | 
 **ap_to_be_used** | **str** |  | 
-**cmp_ap_to_be_used** | **str** |  | 
-**any string name** | **bool, date, datetime, dict, float, int, list, str, none_type** | any string name can be used but the value must be the correct type | [optional]
+**cmp_ap_to_be_used** | **str** |  |
 
-[[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+[[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 

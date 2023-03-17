@@ -31,12 +31,26 @@ def my_function():
 
 ## Requirements:
 
-Python >=3.6
+* Python >=3.6,
+* 'urllib3'>=1.25.3,
+* 'python-dateutil',
+* 'matplotlib',
+* 'astropy'
 
 ## Support
 
 pavelkinc230@gmail.com
 
-## Additional information for functions and models of this package
+### Additional information for functions and models of this package
 
-TODO
+## Documentation For Models
+(mostly genereated)
+ - [ComparisonObject](aphos_openapi/docs/ComparisonObject.md)
+ - [ErrorMessage](aphos_openapi/docs/ErrorMessage.md)
+ - [Flux](aphos_openapi/docs/Flux.md)
+ - [FluxData](aphos_openapi/docs/FluxData.md)
+ - [Night](aphos_openapi/docs/Night.md)
+ - [PhotoProperties](aphos_openapi/docs/PhotoProperties.md)
+ - [SpaceObject](aphos_openapi/docs/SpaceObject.md)
+ - [SpaceObjectWithFluxes](aphos_openapi/docs/SpaceObjectWithFluxes.md)
+ - [User](aphos_openapi/docs/User.md)
