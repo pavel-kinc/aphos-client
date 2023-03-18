@@ -257,12 +257,12 @@ def upload_files(path: str) -> _List[_Tuple[str, bool, str]]:
 
 def get_float(string: _Union[str, float, None]) -> _Optional[float]:
     """
-    Function takes variable and returns float or throws exception.
+    Function takes variable and returns float None.
 
     Args:
         string: string of float number
 
-    Returns: float number from string or float.
+    Returns: float number from string or None.
 
     """
     try:
