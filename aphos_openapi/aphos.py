@@ -170,13 +170,13 @@ def upload_files(path: str) -> _List[_Tuple[str, bool, str]]:
                 try:
                     res.append((file, True, thread.get()))
                 except aphos_openapi.OpenApiException as exc:
-                    res.append((file, False, str(exc.body)))
+                    res.append((file, False, exc))
         else:
             csv_file = _io.FileIO(path, 'rb')
             try:
                 res.append((path, True, api_instance.upload_csv(file=csv_file)))
             except aphos_openapi.OpenApiException as exc:
-                res.append((path, False, str(exc.body)))
+                res.append((path, False, exc))
         return res
 
 
