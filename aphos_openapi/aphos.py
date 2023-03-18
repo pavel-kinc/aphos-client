@@ -1,5 +1,5 @@
 """Module providing pretty print."""
-import _io
+import io as _io  # type: ignore
 import os as _os
 from pprint import pprint
 # from typing import Optional
@@ -90,6 +90,7 @@ def get_objects_by_params(object_id: _Optional[str] = None, catalog: _Optional[s
     Returns: List of space objects.
 
     """
+    min_mag = get_float(min_mag)
     if min_mag is not None and min_mag >= 15 and max_mag is None:
         max_mag = 20
     local_args = locals().copy()
@@ -164,8 +165,8 @@ def set_var_cmp_apertures(comparison: aphos_openapi.models.ComparisonObject,
     Args:
         comparison: ComparisonObject - object to which the apertures are set
         night: Array of nights to which the apertures are changing
-        var: target index of aperture to set (from original star)
-        cmp: target index of aperture to set (from reference star)
+        var: target index of aperture to set (from variable star)
+        cmp: target index of aperture to set (from comparison star)
     """
     night_str = str(night.strftime("%d-%m-%Y"))
     for flux in comparison.data:
@@ -174,7 +175,8 @@ def set_var_cmp_apertures(comparison: aphos_openapi.models.ComparisonObject,
 
             ap_len = len(flux.apertures)
             ref_ap_len = len(flux.cmp_apertures)
-            if not 0 <= var < ap_len or not 0 <= cmp < ref_ap_len:
+            if (var is not None and not 0 <= var < ap_len) or \
+                    (cmp is not None and not 0 <= cmp < ref_ap_len):
                 # in case of variable lengths, this needs to be modified with continue
                 raise IndexError(f"Index out of bounds, use None or {0}-{min(ap_len, ref_ap_len)-1}")
             if var is None:
@@ -187,11 +189,11 @@ def set_var_cmp_apertures(comparison: aphos_openapi.models.ComparisonObject,
 
             if not orig_ap == "saturated" and not ref_ap == "saturated":
                 flux.magnitude = \
-                    -2.5 * aphos_openapi.math.log(get_float(orig_ap) / get_float(ref_ap), 10)
+                    -2.5 * aphos_openapi.math.log(float(orig_ap) / float(ref_ap), 10)
                 orig_dev = flux.aperture_devs[var] if var is not None else flux.ap_auto_dev
                 ref_dev = flux.cmp_aperture_devs[cmp] if cmp is not None else flux.cmp_ap_auto_dev
-                var_sq = (orig_dev / get_float(orig_ap)) ** 2
-                cmp_sq = (ref_dev / get_float(ref_ap)) ** 2
+                var_sq = (orig_dev / float(orig_ap)) ** 2
+                cmp_sq = (ref_dev / float(ref_ap)) ** 2
                 flux.deviation = (var_sq + cmp_sq) ** 0.5
 
 
@@ -253,7 +255,7 @@ def upload_files(path: str) -> _List[_Tuple[str, bool, str]]:
         return res
 
 
-def get_float(string: _Union[str, float]) -> float:
+def get_float(string: _Union[str, float, None]) -> _Optional[float]:
     """
     Function takes variable and returns float or throws exception.
 
@@ -263,7 +265,12 @@ def get_float(string: _Union[str, float]) -> float:
     Returns: float number from string or float.
 
     """
-    return float(string)
+    try:
+        if string is None:
+            return None
+        return float(string)
+    except:
+        return None
 
 
 def info() -> None:
@@ -284,8 +291,10 @@ def info() -> None:
 # pprint(k)
 
 # info()
-# l = get_var_cmp_by_ids("805-031770", "807-030174")  # saturated
-# set_var_cmp_apertures(l, aphos_openapi.datetime.date(2021,11, 6),5,5)
+#l = get_var_cmp_by_ids("805-031770", "807-030174")  # saturated
+#set_var_cmp_apertures(l, aphos_openapi.datetime.date(2021,11, 6),5,6)
+#pprint(l)
+#set_var_cmp_apertures(l, aphos_openapi.datetime.date(2021,11, 6))
 # print(l)
 # g = GraphData(l,users=["xkrutak"], exclude=True,saturated=True)
 # g.graph()
@@ -313,7 +322,10 @@ def info() -> None:
 #pprint(k)
 #incorect = get_object("sdfsdf")
 # print(k)
-# k = GraphData(k, users=["xkrutak"], exclude=False, saturated=False)
+#k = GraphData(k, users=["xkrutak"], exclude=False, saturated=False)
+#k.graph()
+#k.composite_graph()
+#k.phase_graph(2455957.5, 1.209373)
 # print(k)
 # k.to_file("./graphDataTest/data4.csv")
 # pprint(k)

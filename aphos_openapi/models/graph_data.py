@@ -1,13 +1,16 @@
-import matplotlib.pyplot as plt
-from matplotlib.transforms import Bbox as _Box
+import matplotlib.pyplot as plt  # type: ignore
+from matplotlib.transforms import Bbox as _Box  # type: ignore
 
 from aphos_openapi.model.comparison_object import ComparisonObject as _Comp
-from astropy.time import Time as _Time
+from astropy.time import Time as _Time  # type: ignore
+import matplotlib as _matplotlib  # type: ignore
 import pprint as _pprint
 import csv as _csv
 import os as _os
-import matplotlib.pyplot as _plt
-from matplotlib.widgets import CheckButtons
+import matplotlib.pyplot as _plt  # type: ignore
+from matplotlib.widgets import CheckButtons  # type: ignore
+from typing import Union, Optional, List, Tuple, Iterator, Any, Dict
+import datetime
 import math as _math
 
 _COMPR_JDATE_MAX = 0.06
@@ -15,35 +18,77 @@ _COMPR_JDATE_MAX = 0.06
 
 # import numpy as _np
 
+
 class GraphData:
-    def __init__(self, comparison, users=None, exclude=False, saturated=False):
+    """
+    GraphData class for working with Comparison objects and their data.
+
+    Attributes:
+        variable: str, object id of variable space object
+        comparison: str, object id of comparison space object
+        var_catalog: str, catalog of variable space object
+        cmp_catalog: str, catalog of comparison space object
+        data_list: list, list of DMDU objects (tuple of date, magnitude, deviation, user)
+    """
+
+    def __init__(self, comparison: _Comp, users: Optional[List[str]] = None,
+                 exclude: bool = False, saturated: bool = False) -> None:
+        """
+        Constructor for GraphData object.
+
+        Args:
+            comparison: Comparison object of astronomy data about fluxes
+            users: list of users to include [optional]
+            exclude: if set on true, instead of including users, they will be excluded [optional]
+            saturated: should be let on False, only for file work [optional]
+        """
         if type(comparison) != str:
             self.data_list = from_comparison(comparison, users, exclude, saturated)
-            info = [comparison.original.id, comparison.original.catalog,
-                    comparison.reference.id, comparison.reference.catalog]
+            info = [comparison.variable.id, comparison.variable.catalog,
+                    comparison.comparison.id, comparison.comparison.catalog]
         else:
             info, self.data_list = from_file(comparison, users, exclude, saturated)
-        self.original, self.orig_catalog, self.reference, self.ref_catalog = info
+        self.variable, self.var_catalog, self.comparison, self.cmp_catalog = info
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return _pprint.pformat(self.__dict__)
 
-    def to_file(self, path):
+    def to_file(self, path: str) -> None:
+        """
+        File represantation of given object.
+
+        File is in csv format, delimiter is ' ',
+        starts with 4 rows of basic info and then represantation
+        of DMDU objects on each row.
+
+        Args:
+            path: str, path to desired location of created file
+        """
         _os.makedirs(_os.path.dirname(path), exist_ok=True)
         with open(path, 'w', newline='') as file:
             writer = _csv.writer(file, delimiter=' ')
-            writer.writerow(["Original ID", self.original])
-            writer.writerow(["Original Catalog", self.orig_catalog])
-            writer.writerow(["Reference ID", self.reference])
-            writer.writerow(["Reference Catalog", self.ref_catalog])
+            writer.writerow(["Variable ID", self.variable])
+            writer.writerow(["Variable Catalog", self.var_catalog])
+            writer.writerow(["Comparison ID", self.comparison])
+            writer.writerow(["Comparison Catalog", self.cmp_catalog])
             for data in self.data_list:
                 writer.writerow(data)
 
-    def graph(self):
-        d = dict()
+    def graph(self) -> None:
+        """
+        Graph representation of GraphData object (Light curve in time).
+        This representation uses matplotlib to create a graph.
+
+        x-axis: Julian date (normal format)
+
+        y-axis: Magnitude
+
+        Graph has also togglable error bars (deviations) and user filtering based on legend.
+        """
+        d: Dict[str, List[Tuple[float, float, float]]] = dict()
         fig, ax = _plt.subplots(figsize=(11, 7))
         fig.subplots_adjust(right=0.8)
-        _plt.title(f"Light curve of {self.original} {self.orig_catalog} to {self.reference} {self.ref_catalog}")
+        _plt.title(f"Light curve of {self.variable} {self.var_catalog} to {self.comparison} {self.cmp_catalog}")
         _plt.xlabel("Julian Date (JD)")
         _plt.ylabel("Magnitude")
         for a, b, c, u in self.data_list:
@@ -58,7 +103,7 @@ class GraphData:
             errs.append(ax.errorbar(a, b, yerr=c, fmt=" ", label=key, color="#1f77b4", visible=False))
         _, labels = ax.get_legend_handles_labels()
         legend = ax.legend(plts, labels, loc='upper left', title="Username", bbox_to_anchor=(1, 0, 0.07, 1))
-        box = deviations(_plt, ax, errs, plts, legend)
+        box = deviations(_plt, errs, plts, legend)
 
         if len(errs) > 10:
             scroll(fig, legend)
@@ -66,20 +111,29 @@ class GraphData:
 
         _plt.show()
 
-    def composite_graph(self):
-        d = dict()
+    def composite_graph(self) -> None:
+        """
+        Composite graph representation of light curve in time.
+
+        Similar to graph() but biggest "jump" between two measurements is defined by
+        constant (currently 0.06 JD -> ~1.5 hour).
+
+        User can see light curve of multiple measurements without too much of zooming,
+        date is compromised, but relative time between values in 1 measurement is same.
+
+        Every measurement is seperated by 2 lines, distance is given by the given constant.
+        """
         fig, ax = _plt.subplots(figsize=(11, 7))
-        _plt.title(f"Composed night light curve of {self.original} {self.orig_catalog} "
-                   f"to {self.reference} {self.ref_catalog}")
+        _plt.title(f"Composed night light curve of {self.variable} {self.var_catalog} "
+                   f"to {self.comparison} {self.cmp_catalog}")
         _plt.xlabel("Julian Date (JD) - compressed")
         _plt.ylabel("Magnitude")
         fig.subplots_adjust(right=0.8)
         errs = []
-        plts = []
         my_list = sorted(self.data_list, key=lambda x: x.date)
         if len(my_list) == 0:
             return
-        curr_min = 0
+        curr_min: float = 0
         curr = my_list[0].date
         a = []
         b = []
@@ -103,14 +157,23 @@ class GraphData:
         # legend = ax.legend(plts, labels, loc='upper left', title="First day of night", bbox_to_anchor=(1, 0, 0.07, 1))
         # if len(errs) > 10:
         #    scroll(fig, legend)
-        box = deviations(_plt, ax, errs, [plt], None)
+        box = deviations(_plt, errs, [plt], None)
         # toggle_legend(legend, plts, errs)
         _plt.show()
 
-    def phase_graph(self, moment, period):
+    def phase_graph(self, moment: float, period: float) -> None:
+        """
+        Phase graph representation.
+
+        Creates phase curve for given data.
+
+        Args:
+            moment: start of epoch, julian date
+            period: time period in days
+        """
         fig, ax = _plt.subplots(figsize=(11, 7))
-        _plt.title(f"Phase graph of {self.original} {self.orig_catalog} "
-                   f"to {self.reference} {self.ref_catalog}")
+        _plt.title(f"Phase graph of {self.variable} {self.var_catalog} "
+                   f"to {self.comparison} {self.cmp_catalog}")
         _plt.xlabel("Phase")
         _plt.ylabel("Magnitude")
         fig.subplots_adjust(right=0.8)
@@ -124,32 +187,64 @@ class GraphData:
             c.append(z)
         plt, = ax.plot(a, b, "o")
         errs.append(ax.errorbar(a, b, yerr=c, fmt=" ", color="#1f77b4", visible=False))
-        box = deviations(_plt, ax, errs, [plt], None)
+        box = deviations(_plt, errs, [plt], None)
         _plt.show()
 
 
 class DMDU:
-    def __init__(self, date, mag, dev, user):
+    """
+    Class for representation of astronomical data.
+
+    Attributes:
+        date: float, Julian date rounded to precision 7
+        magnitude: float, magnitude rounded to precision 4
+        deviation: float, deviation rounded to precision 4
+        user: str, user who uploaded the data
+    """
+
+    def __init__(self, date: float, mag: float, dev: float, user: str) -> None:
+        """
+        Constructor for DMDU class.
+
+        Args:
+            date: float, Julian date format
+            mag: float, magnitude
+            dev: float, deviation
+            user: str, user
+        """
         self.date = round(date, 7)
         self.magnitude = round(mag, 4)
         self.deviation = round(dev, 4)
         self.user = user
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.date}, {self.magnitude}, {self.deviation}, {self.user}'
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return str(self)
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[Any]:
         for val in self.__dict__.values():
             yield val
 
 
-def from_comparison(comparison: _Comp, users, exclude, saturated):
+def from_comparison(comparison: _Comp, users: Optional[List[str]],
+                    exclude: bool, saturated: bool) -> List[DMDU]:
+    """
+    Helper function for creating GraphData from comparison api object.
+
+    Args:
+        comparison: Comparison
+        users: list of users to include [optional]
+        exclude: if set on True, the users will be excluded [optional]
+        saturated: should be let on False, only for file work [optional]
+
+    Returns: List of DMDU objects of given comparison.
+
+    """
     res = []
     for flux in comparison.data:
-        if not saturated and (flux.ap_auto == "saturated" or flux.ref_ap_auto == "saturated"):
+        if not saturated and (flux.ap_auto == "saturated" or flux.cmp_ap_auto == "saturated"):
             continue
         if users is not None:
             if flux.username in users:
@@ -162,7 +257,20 @@ def from_comparison(comparison: _Comp, users, exclude, saturated):
     return res
 
 
-def from_file(comparison, users, exclude, saturated):
+def from_file(comparison: str, users: Optional[List[str]],
+              exclude: bool, saturated: bool) -> Tuple[List[str], List[DMDU]]:
+    """
+    Helper function for GraphData object, creating it from file.
+
+    Args:
+        comparison: path to comparison file
+        users: list of users to include [optional]
+        exclude: if set on True, the users will be excluded [optional]
+        saturated: should be let on False, only for file work [optional]
+
+    Returns: Fields (attributes) needed by GraphData object (info and list of DMDU).
+
+    """
     info = []
     res = []
     with open(comparison, 'r', newline='') as file:
@@ -184,11 +292,34 @@ def from_file(comparison, users, exclude, saturated):
     return info, res
 
 
-def deviations(plot, ax, errors, plts, legend):
+"""
+Graph handling and event handlers for matplotlib graph helper functions.
+"""
+
+
+def deviations(plot: _matplotlib.pyplot, errors: List[Any],
+               plts: List[_matplotlib.lines.Line2D],
+               legend: Optional[_matplotlib.legend.Legend]) -> CheckButtons:
+    """
+    Serves as checkbutton for graphs (Errorbar for deviations).
+
+    Args:
+        plot: pyplot from matplotlib
+        errors: list of Errorbar containers objects
+        plts: list of Line2D (x-axis and y-axis values)
+        legend: legend of graph [optional]
+
+    Returns: Checkbutton for error bar
+
+    """
     button = plot.axes([0.01, 0.03, 0.18, 0.05], frameon=False)
     box = CheckButtons(button, ["show with deviations"], [False])
 
-    def set_devs(label):
+    def set_devs(label: str) -> None:
+        """
+        Helper function for Checkbutton, logic of togglable errorbar.
+        Event handler.
+        """
         for plt in plts:
             plt.set_visible(True)
         if legend is not None:
@@ -203,10 +334,23 @@ def deviations(plot, ax, errors, plts, legend):
     return box
 
 
-def scroll(fig, legend):
+def scroll(fig: Any, legend: _matplotlib.legend.Legend) -> None:
+    """
+    Serves as scrolling event for graphs.
+
+    Args:
+        fig: figure object from matplotlib.pyplot.subplots()
+        legend:
+    """
     d = {"down": 40, "up": -40}
 
-    def legend_scroll(evt):
+    def legend_scroll(evt: Any) -> None:
+        """
+        Helper function, event handler for scrolling in legend of graph.
+
+        Args:
+            evt: Event which occured
+        """
         if legend.contains(evt):
             bbox = legend.get_bbox_to_anchor()
             bbox = _Box.from_bounds(bbox.x0, bbox.y0 + d[evt.button], bbox.width, bbox.height)
@@ -217,12 +361,27 @@ def scroll(fig, legend):
     fig.canvas.mpl_connect("scroll_event", legend_scroll)
 
 
-def toggle_legend(legend, plts, errs):
+def toggle_legend(legend: _matplotlib.legend.Legend, plts: List[_matplotlib.lines.Line2D],
+                  errs: List[Any]) -> None:
+    """
+    Serves as creating togglable legend for graph (and event handling).
+
+    Args:
+        legend: legend of matplotlib.pyplot graph
+        plts: list of plots in graph
+        errs: list of Errorbar containers objects
+    """
     for leg in legend.get_lines():
         leg.set_picker(True)
         leg.set_pickradius(10)
 
-    def on_leg_click(event):
+    def on_leg_click(event: Any) -> None:
+        """
+        Event handler for clicking on legend.
+
+        Args:
+            event: Event
+        """
         a = event.artist
         label = a.get_label()
         visible = False

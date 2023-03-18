@@ -63,7 +63,7 @@ class ApiValueError(OpenApiException, ValueError):
 class ApiAttributeError(OpenApiException, AttributeError):
     def __init__(self, msg, path_to_item=None):
         """
-        Raised when an attribute reference or assignment fails.
+        Raised when an attribute comparison or assignment fails.
 
         Args:
             msg (str): the exception message
