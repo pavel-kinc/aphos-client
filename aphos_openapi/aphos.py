@@ -26,8 +26,16 @@ ALL_CATALOGS = "All catalogues"
 
 _READ_ME = "https://test.pypi.org/project/aphos-openapi/"
 
+_WEBSITE = "https://ip-147-251-21-104.flt.cloud.muni.cz/"
+
 
 def get_catalogs() -> _Optional[_List[str]]:
+    """
+    Get all available catalogs from APhoS.
+
+    Returns: List of available catalogs (strings).
+
+    """
     # Enter a context with an instance of the API client
     with aphos_openapi.ApiClient(configuration) as api_client:
         # Create an instance of the API class
@@ -43,6 +51,16 @@ def get_catalogs() -> _Optional[_List[str]]:
 
 def get_object(object_id: str, catalog: str = DEFAULT_CATALOG) \
         -> _Optional[aphos_openapi.models.SpaceObjectWithFluxes]:
+    """
+    Get object from APhoS based on parameters.
+
+    Args:
+        object_id: object id of the space object
+        catalog: catalog of the space object
+
+    Returns: SpaceObjectWithFluxes or None if there is no such object.
+
+    """
     with aphos_openapi.ApiClient(configuration) as api_client:
         api_instance = aphos_openapi.space_object_api.SpaceObjectApi(api_client)
 
@@ -58,6 +76,20 @@ def get_objects_by_params(object_id: _Optional[str] = None, catalog: _Optional[s
                           min_mag: _Union[str, float, None] = None,
                           max_mag: _Union[str, float, None] = None) -> \
         _Optional[_List[aphos_openapi.models.SpaceObject]]:
+    """
+    Get space objects based on multiple parameters, where every can be None.
+
+    Args:
+        object_id: object id of the space object
+        catalog: catalog of space objects
+        name: name of space objects
+        coordinates: coordinates
+        min_mag: minimum magnitude (0 and more)
+        max_mag: maximum magnitude (20 and less)
+
+    Returns: List of space objects.
+
+    """
     if min_mag is not None and min_mag >= 15 and max_mag is None:
         max_mag = 20
     local_args = locals().copy()
@@ -81,6 +113,18 @@ def get_var_cmp_by_ids(variable_id: str, comparison_id: str,
                        var_catalog: str = DEFAULT_CATALOG,
                        cmp_catalog: str = DEFAULT_CATALOG) \
         -> _Optional[aphos_openapi.models.ComparisonObject]:
+    """
+    Get Comparison object of variable star (space object) and comparison star based on IDs.
+
+    Args:
+        variable_id: id of variable star
+        comparison_id: id of comparison star
+        var_catalog: catalog of variable star
+        cmp_catalog: catalog of comparison star
+
+    Returns: Data about objects and fluxes.
+
+    """
     try:
         with aphos_openapi.ApiClient(configuration) as api_client:
             api_instance = aphos_openapi.space_object_api.SpaceObjectApi(api_client)
@@ -92,6 +136,15 @@ def get_var_cmp_by_ids(variable_id: str, comparison_id: str,
 
 
 def get_user(username: str) -> _Optional[aphos_openapi.models.User]:
+    """
+    Get user by username.
+
+    Args:
+        username: username of a user
+
+    Returns: User (username and description).
+
+    """
     try:
         with aphos_openapi.ApiClient(configuration) as api_client:
             api_instance = aphos_openapi.user_api.UserApi(api_client)
@@ -106,7 +159,7 @@ def set_var_cmp_apertures(comparison: aphos_openapi.models.ComparisonObject,
                           cmp: _Optional[int] = None) -> None:
     """
     Sets apertures based on night and desired indexes in comparison object and
-    recalculates magnitude and deviation
+    recalculates magnitude and deviation.
 
     Args:
         comparison: ComparisonObject - object to which the apertures are set
@@ -143,6 +196,16 @@ def set_var_cmp_apertures(comparison: aphos_openapi.models.ComparisonObject,
 
 
 def resolve_name_aphos(name: str) -> _Optional[_List[aphos_openapi.models.SpaceObject]]:
+    """
+    Resolve name based on astropy name resolver and tries to find equal potential objects
+    in APhoS database (Cross-identification).
+
+    Args:
+        name: any name by which a space object can be resolved
+
+    Returns: List of space objects which are potentially equal to given name, from all catalogs.
+
+    """
     try:
         astropy_coords = _SkyCoord.from_name(name)
     except:
@@ -156,6 +219,16 @@ def resolve_name_aphos(name: str) -> _Optional[_List[aphos_openapi.models.SpaceO
 
 
 def upload_files(path: str) -> _List[_Tuple[str, bool, str]]:
+    """
+    Upload files as Anounymous user. Files are in format csv, with delimiter ';',
+    generated from SIPS software. For authenticated upload use website -> info().
+
+    Args:
+        path: path to file or directory with files
+
+    Returns: List of tuple (file, success of upload of the given file, info about upload).
+
+    """
     with aphos_openapi.ApiClient(configuration) as api_client:
         api_instance = aphos_openapi.space_object_api.SpaceObjectApi(api_client)
         res = []
@@ -187,7 +260,7 @@ def get_float(string: _Union[str, float]) -> float:
     Args:
         string: string of float number
 
-    Returns: float number from string or float
+    Returns: float number from string or float.
 
     """
     return float(string)
@@ -200,6 +273,7 @@ def info() -> None:
     print(f"help -> documentation -> {_READ_ME}")
     print("APhoS version: "
           + aphos_openapi.pkg_resources.require("aphos_openapi")[0].version)
+    print(f"Website can be found here: {_WEBSITE}")
 
 
 # o = get_object("604-024943")
@@ -229,14 +303,15 @@ def info() -> None:
 # c=get_objects_by_params(coordinates=coords)
 # pprint(c)
 
-k = get_var_cmp_by_ids("605-025126", "604-024943", "UCAC4", "UCAC4")  # not saturated
+#k = get_var_cmp_by_ids("605-025126", "604-024943", "UCAC4", "UCAC4")  # not saturated
 # print(k)
 # VarCmp getvarcmpbyids
 # VAR vs CMP (orig vs ref)
 # pprint(k)
-date = aphos_openapi.datetime.date(2022,3, 22)
-set_var_cmp_apertures(k, date, 0, 9)
-pprint(k)
+#date = aphos_openapi.datetime.date(2022,3, 22)
+#set_var_cmp_apertures(k, date, 0, 9)
+#pprint(k)
+#incorect = get_object("sdfsdf")
 # print(k)
 # k = GraphData(k, users=["xkrutak"], exclude=False, saturated=False)
 # print(k)
@@ -273,5 +348,4 @@ pprint(k)
 # pprint(get_user("kekw"))
 # print(type(get_catalogs()))
 # print(upload_files("csv_tests"))
-#info()
 #info()
