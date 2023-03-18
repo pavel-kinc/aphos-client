@@ -24,6 +24,8 @@ DEFAULT_CATALOG = "UCAC4"
 
 ALL_CATALOGS = "All catalogues"
 
+_READ_ME = "https://test.pypi.org/project/aphos-openapi/"
+
 
 def get_catalogs() -> _Optional[_List[str]]:
     # Enter a context with an instance of the API client
@@ -34,8 +36,8 @@ def get_catalogs() -> _Optional[_List[str]]:
         try:
             # Find all catalogs
             return api_instance.get_catalogs()
-        except aphos_openapi.ApiException as exc:
-            print(f"Exception when calling CatalogApi->get_catalogs: {exc}\n")
+        except aphos_openapi.OpenApiException as exc:
+            print(exc)
             return None
 
 
@@ -46,8 +48,8 @@ def get_object(object_id: str, catalog: str = DEFAULT_CATALOG) \
 
         try:
             return api_instance.get_space_object_by_id(object_id, catalog=catalog)
-        except aphos_openapi.ApiException as exc:
-            print("Exception when calling CatalogApi->get_catalogs: %s\n" % exc)
+        except aphos_openapi.OpenApiException as exc:
+            print(exc)
             return None
 
 
@@ -59,51 +61,44 @@ def get_objects_by_params(object_id: _Optional[str] = None, catalog: _Optional[s
     if min_mag is not None and min_mag >= 15 and max_mag is None:
         max_mag = 20
     local_args = locals().copy()
-    with aphos_openapi.ApiClient(configuration) as api_client:
 
-        api_instance = aphos_openapi.space_object_api.SpaceObjectApi(api_client)
-
-        try:
-            params = dict()
-            for key in local_args.keys():
-                if local_args[key] is not None:
-                    if key == 'coordinates':
-                        local_args[key] = str(local_args[key])
-                    params[key] = local_args[key]
+    try:
+        params = dict()
+        for key in local_args.keys():
+            if local_args[key] is not None:
+                if key == 'coordinates':
+                    local_args[key] = str(local_args[key])
+                params[key] = local_args[key]
+        with aphos_openapi.ApiClient(configuration) as api_client:
+            api_instance = aphos_openapi.space_object_api.SpaceObjectApi(api_client)
             return api_instance.find_space_objects_by_params(**params)
-        except aphos_openapi.ApiException as e:
-            print("Exception when calling CatalogApi->get_catalogs: %s\n" % e)
-            return None
+    except aphos_openapi.OpenApiException as exc:
+        print(exc)
+        return None
 
 
 def get_var_cmp_by_ids(variable_id: str, comparison_id: str,
                        var_catalog: str = DEFAULT_CATALOG,
                        cmp_catalog: str = DEFAULT_CATALOG) \
         -> _Optional[aphos_openapi.models.ComparisonObject]:
-    # Enter a context with an instance of the API client
-    with aphos_openapi.ApiClient(configuration) as api_client:
-        # Create an instance of the API class
-        api_instance = aphos_openapi.space_object_api.SpaceObjectApi(api_client)
-
-        try:
+    try:
+        with aphos_openapi.ApiClient(configuration) as api_client:
+            api_instance = aphos_openapi.space_object_api.SpaceObjectApi(api_client)
             return api_instance.get_comparison_by_identificators \
                 (variable_id, comparison_id, original_cat=var_catalog, reference_cat=cmp_catalog)
-        except aphos_openapi.ApiException as e:
-            print("Exception when calling CatalogApi->get_catalogs: %s\n" % e)
-            return None
+    except aphos_openapi.OpenApiException as exc:
+        print(exc)
+        return None
 
 
 def get_user(username: str) -> _Optional[aphos_openapi.models.User]:
-    # Enter a context with an instance of the API client
-    with aphos_openapi.ApiClient(configuration) as api_client:
-        # Create an instance of the API class
-        api_instance = aphos_openapi.user_api.UserApi(api_client)
-
-        try:
+    try:
+        with aphos_openapi.ApiClient(configuration) as api_client:
+            api_instance = aphos_openapi.user_api.UserApi(api_client)
             return api_instance.get_user_by_username(username)
-        except aphos_openapi.ApiException as e:
-            print("Exception when calling CatalogApi->get_catalogs: %s\n" % e)
-            return None
+    except aphos_openapi.OpenApiException as exc:
+        print(exc)
+        return None
 
 
 def set_var_cmp_apertures(comparison: aphos_openapi.models.ComparisonObject,
@@ -123,22 +118,25 @@ def set_var_cmp_apertures(comparison: aphos_openapi.models.ComparisonObject,
     for flux in comparison.data:
 
         if flux.night.first_date_of_the_night == night_str:
+
             ap_len = len(flux.apertures)
-
-            if var is None or 0 <= var < ap_len:
+            ref_ap_len = len(flux.cmp_apertures)
+            if not 0 <= var < ap_len or not 0 <= cmp < ref_ap_len:
+                # in case of variable lengths, this needs to be modified with continue
+                raise IndexError(f"Index out of bounds, use None or {0}-{min(ap_len, ref_ap_len)-1}")
+            if var is None:
                 flux.night.ap_to_be_used = str(var) if var is not None else "auto"
-            ref_ap_len = len(flux.ref_apertures)
 
-            if cmp is None or 0 <= cmp < ref_ap_len:
-                flux.night.ref_ap_to_be_used = str(cmp) if cmp is not None else "auto"
+            if cmp is None:
+                flux.night.cmp_ap_to_be_used = str(cmp) if cmp is not None else "auto"
             orig_ap = flux.apertures[var] if var is not None else flux.ap_auto
-            ref_ap = flux.ref_apertures[cmp] if cmp is not None else flux.ref_ap_auto
+            ref_ap = flux.cmp_apertures[cmp] if cmp is not None else flux.cmp_ap_auto
 
             if not orig_ap == "saturated" and not ref_ap == "saturated":
                 flux.magnitude = \
                     -2.5 * aphos_openapi.math.log(get_float(orig_ap) / get_float(ref_ap), 10)
                 orig_dev = flux.aperture_devs[var] if var is not None else flux.ap_auto_dev
-                ref_dev = flux.ref_aperture_devs[cmp] if cmp is not None else flux.ref_ap_auto_dev
+                ref_dev = flux.cmp_aperture_devs[cmp] if cmp is not None else flux.cmp_ap_auto_dev
                 var_sq = (orig_dev / get_float(orig_ap)) ** 2
                 cmp_sq = (ref_dev / get_float(ref_ap)) ** 2
                 flux.deviation = (var_sq + cmp_sq) ** 0.5
@@ -171,20 +169,20 @@ def upload_files(path: str) -> _List[_Tuple[str, bool, str]]:
             for file, thread in files_threads:
                 try:
                     res.append((file, True, thread.get()))
-                except aphos_openapi.ApiException as exc:
+                except aphos_openapi.OpenApiException as exc:
                     res.append((file, False, str(exc.body)))
         else:
             csv_file = _io.FileIO(path, 'rb')
             try:
                 res.append((path, True, api_instance.upload_csv(file=csv_file)))
-            except aphos_openapi.ApiException as exc:
+            except aphos_openapi.OpenApiException as exc:
                 res.append((path, False, str(exc.body)))
         return res
 
 
 def get_float(string: _Union[str, float]) -> float:
     """
-    Function takes variable and returns float or throws exception
+    Function takes variable and returns float or throws exception.
 
     Args:
         string: string of float number
@@ -195,19 +193,13 @@ def get_float(string: _Union[str, float]) -> float:
     return float(string)
 
 
-def hello() -> None:
+def info() -> None:
     """
-    Prints basic info and version about APhoS and libraries
+    Prints useful documentation and info about this package.
     """
-    print("Hello" + " APhoS version: "
+    print(f"help -> documentation -> {_READ_ME}")
+    print("APhoS version: "
           + aphos_openapi.pkg_resources.require("aphos_openapi")[0].version)
-
-
-def help_aphos() -> None:
-    """
-    Prints useful documentation and info about this package usage
-    """
-    print("""help_aphos -> README.md -> https://test.pypi.org/project/aphos-openapi/\n""")
 
 
 # o = get_object("604-024943")
@@ -217,7 +209,7 @@ def help_aphos() -> None:
 # k = get_var_cmp_by_ids("805-031770", "781-038863")  # not saturated
 # pprint(k)
 
-# help_aphos()
+# info()
 # l = get_var_cmp_by_ids("805-031770", "807-030174")  # saturated
 # set_var_cmp_apertures(l, aphos_openapi.datetime.date(2021,11, 6),5,5)
 # print(l)
@@ -237,13 +229,14 @@ def help_aphos() -> None:
 # c=get_objects_by_params(coordinates=coords)
 # pprint(c)
 
-# k = get_var_cmp_by_ids("605-025126", "604-024943", "UCAC4", "UCAC4")  # not saturated
+k = get_var_cmp_by_ids("605-025126", "604-024943", "UCAC4", "UCAC4")  # not saturated
 # print(k)
 # VarCmp getvarcmpbyids
 # VAR vs CMP (orig vs ref)
 # pprint(k)
-# date = aphos_openapi.datetime.date(2022,3, 22)
-# set_var_cmp_apertures(k, date, 5, 5)
+date = aphos_openapi.datetime.date(2022,3, 22)
+set_var_cmp_apertures(k, date, 0, 9)
+pprint(k)
 # print(k)
 # k = GraphData(k, users=["xkrutak"], exclude=False, saturated=False)
 # print(k)
@@ -279,4 +272,6 @@ def help_aphos() -> None:
 # pprint(l)
 # pprint(get_user("kekw"))
 # print(type(get_catalogs()))
-print(upload_files("csv_tests"))
+# print(upload_files("csv_tests"))
+#info()
+#info()
