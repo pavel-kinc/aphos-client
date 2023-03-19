@@ -83,7 +83,7 @@ class User(ModelNormal):
         """
         return {
             'username': (str,),  # noqa: E501
-            'description': (str,),  # noqa: E501
+            'description': (str, type(None)),  # noqa: E501
         }
 
     @cached_property

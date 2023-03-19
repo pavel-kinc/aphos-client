@@ -31,7 +31,7 @@ class GraphData:
         data_list: list, list of DMDU objects (tuple of date, magnitude, deviation, user)
     """
 
-    def __init__(self, comparison: _Comp, users: Optional[List[str]] = None,
+    def __init__(self, comparison: Union[_Comp, str], users: Optional[List[str]] = None,
                  exclude: bool = False, saturated: bool = False) -> None:
         """
         Constructor for GraphData object.

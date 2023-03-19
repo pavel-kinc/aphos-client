@@ -155,7 +155,7 @@ def get_user(username: str) -> _Optional[aphos_openapi.models.User]:
 
 
 def set_var_cmp_apertures(comparison: aphos_openapi.models.ComparisonObject,
-                          night: _Optional[aphos_openapi.datetime.date], var: _Optional[int] = None,
+                          night: _Optional[aphos_openapi.datetime.date] = None, var: _Optional[int] = None,
                           cmp: _Optional[int] = None) -> None:
     """
     Sets apertures based on night and desired indexes in comparison object and
