@@ -3,6 +3,7 @@ import io as _io  # type: ignore
 import os as _os
 from pprint import pprint
 # from typing import Optional
+import typing as _typing
 from typing import Optional as _Optional
 from typing import List as _List
 from typing import Union as _Union
@@ -12,6 +13,8 @@ from astropy.coordinates import SkyCoord as _SkyCoord  # type: ignore
 import aphos_openapi  # type: ignore
 from aphos_openapi.models.coordinates import Coordinates
 from aphos_openapi.models.graph_data import GraphData
+
+__all__=("get_catalogs", "configuration")
 
 # Defining the host is optional and defaults to http://localhost:8009
 # See configuration.py for a list of all supported configuration parameters.
@@ -348,3 +351,13 @@ def info() -> None:
 # print(type(get_catalogs()))
 # print(upload_files("csv_tests"))
 # info()
+
+# print(Coordinates("20 54 05.689 -37 01 17.38",10, 'h', 'm'))
+# print(Coordinates("20:54:05.689-37:01:17.38",0.05, 'h'))
+# print(Coordinates("17h15-17d10m", 0.05))
+# print(Coordinates("275d11m15.6954s+17d59m59.876s", 0.05))
+# print(Coordinates("12.34567h-17.87654d", 0.05))
+# print(Coordinates("350.123456d-17.33333d", 0.05))
+# print(parse_radius(25, 's'))
+# coords = Coordinates("20 54 05.689 -37 01 17.38", 0.05)
+# print(coords)

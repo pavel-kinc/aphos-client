@@ -37,7 +37,7 @@ class GraphData:
         Constructor for GraphData object.
 
         Args:
-            comparison: Comparison object of astronomy data about fluxes
+            comparison: Comparison object of astronomy data about fluxes or path to file
             users: list of users to include [optional]
             exclude: if set on true, instead of including users, they will be excluded [optional]
             saturated: should be let on False, only for file work [optional]

@@ -57,6 +57,7 @@ if __name__ == '__main__':
 ```
 
 ## Usage Coordinates:
+__More info in package.__
 
 ```
 from aphos_openapi import aphos
@@ -64,7 +65,6 @@ from aphos_openapi.models.coordinates import Coordinates
 from astropy.coordinates import SkyCoord
 from pprint import pprint  # pretty print for objects
 
-    
 """
 Coordinates can take astropy.coordinates SkyCoord or other strings format listed below.
 If units are present in string, unit will be ignored.
@@ -85,12 +85,19 @@ pprint(space_objects)
 ```
 
 ## Usage GraphData:
+__Main methods:__ 
+* constructor 
+* to_file()
+* graph()
+* composite_graph()
+* phase_graph()
+
+__More info about methods in package.__
 
 ```
 from aphos_openapi import aphos
 from aphos_openapi.models.graph_data import GraphData
 from pprint import pprint  # pretty print for objects
-
 
 var_cmp = aphos.get_var_cmp_by_ids("605-025126", "604-024943")
 if var_cmp is not None:
@@ -107,7 +114,7 @@ data_from_file.phase_graph(2455957.5, 1.209373)  # start of epoch and period
 
 ## Requirements:
 
-* Python >=3.6,
+* Python >=3.7,
 * 'urllib3'>=1.25.3,
 * 'python-dateutil',
 * 'matplotlib',
@@ -130,60 +137,60 @@ Returns: List of available catalogs (strings).
 Get object from APhoS based on parameters.  
 Returns: SpaceObjectWithFluxes or None if there is no such object.  
 Params:  
-&emsp;object_id – object id of the space object  
-&emsp;catalog – catalog of the space object
+&emsp;object_id - object id of the space object  
+&emsp;catalog - catalog of the space object
 <br/><br/>
 
 #### get_objects_by_params(<br/>object_id: Optional[str] = None, <br/> catalog: Optional[str] = None,<br/> name: Optional[str] = None, <br/>coordinates: Optional[Coordinates] = None,<br/> min_mag: Union[str, float, None] = None,<br/> max_mag: Union[str, float, None] = None) <br/>-> Optional[list[SpaceObject]]
 Get space objects based on multiple parameters, where every can be None.  
 Returns: List of space objects.  
 Params:  
-&emsp;object_id – object id of the space object  
-&emsp;catalog – catalog of space objects  
-&emsp;name – name of space objects  
-&emsp;coordinates – coordinates  
-&emsp;min_mag – minimum magnitude (0 and more)  
-&emsp;max_mag – maximum magnitude (20 and less)
+&emsp;object_id - object id of the space object  
+&emsp;catalog - catalog of space objects  
+&emsp;name - name of space objects  
+&emsp;coordinates - coordinates  
+&emsp;min_mag - minimum magnitude (0 and more)  
+&emsp;max_mag - maximum magnitude (20 and less)
 <br/><br/>
 
 #### get_var_cmp_by_ids(<br/>variable_id: str,<br/>comparison_id: str,<br/>var_catalog: str = DEFAULT_CATALOG,<br/>cmp_catalog: str = DEFAULT_CATALOG) <br/>-> Optional[ComparisonObject]
 Get Comparison object of variable star (space object) and comparison star based on IDs.  
 Returns: Data about objects and fluxes.  
 Params:  
-&emsp;variable_id – id of variable star  
-&emsp;comparison_id – id of comparison star  
-&emsp;var_catalog – catalog of variable star  
-&emsp;cmp_catalog – catalog of comparison star
+&emsp;variable_id - id of variable star  
+&emsp;comparison_id - id of comparison star  
+&emsp;var_catalog - catalog of variable star  
+&emsp;cmp_catalog - catalog of comparison star
 <br/><br/>
 
 #### get_user(<br/>username: str)<br/> -> Optional[User]
 Get user by username.  
 Returns: User (username and description).  
 Params:  
-&emsp;username – username of a user
+&emsp;username - username of a user
 <br/><br/>
 
 #### set_var_cmp_apertures(<br/>comparison: ComparisonObject,<br/>night: Optional[date] = None,<br/>var: Optional[int] = None,<br/>cmp: Optional[int] = None)<br/> -> None
 Sets apertures based on night and desired indexes in comparison object and recalculates magnitude and deviation.  
 Params:  
-&emsp;comparison – ComparisonObject - object to which the apertures are set  
-&emsp;night – night to which the apertures are changing (None is all nights)  
-&emsp;var – target index of aperture to set (from variable star)  
-&emsp;cmp – target index of aperture to set (from comparison star)
+&emsp;comparison - ComparisonObject - object to which the apertures are set  
+&emsp;night - night to which the apertures are changing (None is all nights)  
+&emsp;var - target index of aperture to set (from variable star)  
+&emsp;cmp - target index of aperture to set (from comparison star)
 <br/><br/>
 
 #### resolve_name_aphos(<br/>name: str) <br/>-> Optional[list[SpaceObject]]
 Resolve name based on astropy name resolver and tries to find equal potential objects in APhoS database (Cross-identification).  
 Returns: List of space objects which are potentially equal to given name, from all catalogs.  
 Params:  
-&emsp;name – any name by which a space object can be resolved
+&emsp;name - any name by which a space object can be resolved
 <br/><br/>
 
 #### upload_files(<br/>path: str) <br/>-> list[tuple[str, bool, str]]
 Upload files as Anounymous user. Files are in format csv, with delimiter ';', generated from SIPS software. For authenticated upload use website -> info().  
 Returns: List of tuple (file, success of upload of the given file, info about upload).  
 Params:  
-&emsp;path – path to file or directory with files
+&emsp;path - path to file or directory with files
 <br/><br/>
 
 #### info() -> None
