@@ -155,7 +155,7 @@ def get_user(username: str) -> _Optional[aphos_openapi.models.User]:
 
 
 def set_var_cmp_apertures(comparison: aphos_openapi.models.ComparisonObject,
-                          night: aphos_openapi.datetime.date, var: _Optional[int] = None,
+                          night: _Optional[aphos_openapi.datetime.date], var: _Optional[int] = None,
                           cmp: _Optional[int] = None) -> None:
     """
     Sets apertures based on night and desired indexes in comparison object and
@@ -163,26 +163,30 @@ def set_var_cmp_apertures(comparison: aphos_openapi.models.ComparisonObject,
 
     Args:
         comparison: ComparisonObject - object to which the apertures are set
-        night: Array of nights to which the apertures are changing
+        night: night to which the apertures are changing (None is all nights)
         var: target index of aperture to set (from variable star)
         cmp: target index of aperture to set (from comparison star)
     """
-    night_str = str(night.strftime("%d-%m-%Y"))
+    ignore = False
+    night_str = ""
+    if night is None:
+        ignore = True
+    else:
+        night_str = str(night.strftime("%d-%m-%Y"))
     for flux in comparison.data:
 
-        if flux.night.first_date_of_the_night == night_str:
+        if ignore or flux.night.first_date_of_the_night == night_str:
 
             ap_len = len(flux.apertures)
             ref_ap_len = len(flux.cmp_apertures)
             if (var is not None and not 0 <= var < ap_len) or \
                     (cmp is not None and not 0 <= cmp < ref_ap_len):
                 # in case of variable lengths, this needs to be modified with continue
-                raise IndexError(f"Index out of bounds, use None or {0}-{min(ap_len, ref_ap_len)-1}")
-            if var is None:
-                flux.night.ap_to_be_used = str(var) if var is not None else "auto"
+                raise IndexError(f"Index out of bounds, use None or {0}-{min(ap_len, ref_ap_len) - 1}")
 
-            if cmp is None:
-                flux.night.cmp_ap_to_be_used = str(cmp) if cmp is not None else "auto"
+            flux.night.ap_to_be_used = str(var) if var is not None else "auto"
+            flux.night.cmp_ap_to_be_used = str(cmp) if cmp is not None else "auto"
+
             orig_ap = flux.apertures[var] if var is not None else flux.ap_auto
             ref_ap = flux.cmp_apertures[cmp] if cmp is not None else flux.cmp_ap_auto
 
@@ -263,21 +267,21 @@ def info() -> None:
           + aphos_openapi.pkg_resources.require("aphos_openapi")[0].version)
     print(f"Website can be found here: {_WEBSITE}")
 
-
-#o = get_object("604-024943")
-#print(o)
-#print(type(o))
-#k=get_object("604-024734")
-#k = get_var_cmp_by_ids("805-031770", "781-038863")  # not saturated
-#date = aphos_openapi.datetime.date(2021,11, 6)
-#set_var_cmp_apertures(k, date, 5, 5)
-#pprint(k)
+# o = get_object("604-024943")
+# o.id
+# print(o)
+# print(type(o))
+# k=get_object("604-024734")
+# k = get_var_cmp_by_ids("805-031770", "781-038863")  # not saturated
+# date = aphos_openapi.datetime.date(2021,11, 6)
+# set_var_cmp_apertures(k, date, 5, 5)
+# pprint(k)
 
 # info()
-#l = get_var_cmp_by_ids("805-031770", "807-030174")  # saturated
-#set_var_cmp_apertures(l, aphos_openapi.datetime.date(2021,11, 6),5,6)
-#pprint(l)
-#set_var_cmp_apertures(l, aphos_openapi.datetime.date(2021,11, 6))
+# l = get_var_cmp_by_ids("805-031770", "807-030174")  # saturated
+# set_var_cmp_apertures(l, aphos_openapi.datetime.date(2021,11, 6),5,6)
+# pprint(l)
+# set_var_cmp_apertures(l, aphos_openapi.datetime.date(2021,11, 6))
 # print(l)
 # g = GraphData(l,users=["xkrutak"], exclude=True,saturated=True)
 # g.graph()
@@ -295,20 +299,20 @@ def info() -> None:
 # c=get_objects_by_params(coordinates=coords)
 # pprint(c)
 
-#k = get_var_cmp_by_ids("605-025126", "604-024943", "UCAC4", "UCAC4")  # not saturated
+# k = get_var_cmp_by_ids("605-025126", "604-024943", "UCAC4", "UCAC4")  # not saturated
 # print(k)
 # VarCmp getvarcmpbyids
 # VAR vs CMP (orig vs ref)
 # pprint(k)
-#date = aphos_openapi.datetime.date(2022,3, 22)
-#set_var_cmp_apertures(k, date, 0, 9)
-#pprint(k)
-#incorect = get_object("sdfsdf")
+# date = aphos_openapi.datetime.date(2022,3, 22)
+# set_var_cmp_apertures(k, date, 0, 9)
+# pprint(k)
+# incorect = get_object("sdfsdf")
 # print(k)
-#k = GraphData(k, users=["xkrutak"], exclude=False, saturated=False)
-#k.graph()
-#k.composite_graph()
-#k.phase_graph(2455957.5, 1.209373)
+# k = GraphData(k, users=["xkrutak"], exclude=False, saturated=False)
+# k.graph()
+# k.composite_graph()
+# k.phase_graph(2455957.5, 1.209373)
 # print(k)
 # k.to_file("./graphDataTest/data4.csv")
 # pprint(k)
@@ -343,4 +347,4 @@ def info() -> None:
 # pprint(get_user("kekw"))
 # print(type(get_catalogs()))
 # print(upload_files("csv_tests"))
-#info()
+# info()

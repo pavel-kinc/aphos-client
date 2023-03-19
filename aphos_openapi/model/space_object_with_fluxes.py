@@ -232,7 +232,7 @@ class SpaceObjectWithFluxes(ModelComposed):
     ])
 
     @convert_js_args_to_python_args
-    def __init__(self, *args, **kwargs):  # noqa: E501
+    def __init__(self, id, catalog, name, right_asc, declination, magnitude, fluxes_count, fluxes, *args, **kwargs):  # noqa: E501
         """SpaceObjectWithFluxes - a model defined in OpenAPI
 
         Keyword Args:
@@ -302,6 +302,15 @@ class SpaceObjectWithFluxes(ModelComposed):
         self._path_to_item = _path_to_item
         self._configuration = _configuration
         self._visited_composed_classes = _visited_composed_classes + (self.__class__,)
+
+        self.id = id
+        self.catalog = catalog
+        self.name = name
+        self.right_asc = right_asc
+        self.declination = declination
+        self.magnitude = magnitude
+        self.fluxes_count = fluxes_count
+        self.fluxes = fluxes
 
         constant_args = {
             '_check_type': _check_type,
