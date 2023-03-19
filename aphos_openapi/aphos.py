@@ -90,8 +90,7 @@ def get_objects_by_params(object_id: _Optional[str] = None, catalog: _Optional[s
     Returns: List of space objects.
 
     """
-    min_mag = get_float(min_mag)
-    if min_mag is not None and min_mag >= 15 and max_mag is None:
+    if min_mag is not None and float(min_mag) >= 15 and max_mag is None:
         max_mag = 20
     local_args = locals().copy()
 
@@ -255,24 +254,6 @@ def upload_files(path: str) -> _List[_Tuple[str, bool, str]]:
         return res
 
 
-def get_float(string: _Union[str, float, None]) -> _Optional[float]:
-    """
-    Function takes variable and returns float None.
-
-    Args:
-        string: string of float number
-
-    Returns: float number from string or None.
-
-    """
-    try:
-        if string is None:
-            return None
-        return float(string)
-    except:
-        return None
-
-
 def info() -> None:
     """
     Prints useful documentation and info about this package.
@@ -283,12 +264,14 @@ def info() -> None:
     print(f"Website can be found here: {_WEBSITE}")
 
 
-# o = get_object("604-024943")
-# print(o)
-# print(type(o))
-# k=get_object("604-024734")
-# k = get_var_cmp_by_ids("805-031770", "781-038863")  # not saturated
-# pprint(k)
+#o = get_object("604-024943")
+#print(o)
+#print(type(o))
+#k=get_object("604-024734")
+#k = get_var_cmp_by_ids("805-031770", "781-038863")  # not saturated
+#date = aphos_openapi.datetime.date(2021,11, 6)
+#set_var_cmp_apertures(k, date, 5, 5)
+#pprint(k)
 
 # info()
 #l = get_var_cmp_by_ids("805-031770", "807-030174")  # saturated

@@ -44,13 +44,152 @@ pavelkinc230@gmail.com
 ### Additional information for functions and models of this package
 
 ## Documentation For Models
-(mostly genereated)
- - [ComparisonObject](aphos_openapi/docs/ComparisonObject.md)
- - [ErrorMessage](aphos_openapi/docs/ErrorMessage.md)
- - [Flux](aphos_openapi/docs/Flux.md)
- - [FluxData](aphos_openapi/docs/FluxData.md)
- - [Night](aphos_openapi/docs/Night.md)
- - [PhotoProperties](aphos_openapi/docs/PhotoProperties.md)
- - [SpaceObject](aphos_openapi/docs/SpaceObject.md)
- - [SpaceObjectWithFluxes](aphos_openapi/docs/SpaceObjectWithFluxes.md)
- - [User](aphos_openapi/docs/User.md)
+(Api models only, mostly genereated)
+ - [ComparisonObject](README.md#comparisonobject)
+ - [ErrorMessage](README.md#errormessage)
+ - [Flux](README.md#flux)
+ - [FluxData](README.md#fluxdata)
+ - [Night](README.md#night)
+ - [PhotoProperties](README.md#photoproperties)
+ - [SpaceObject](README.md#spaceobject)
+ - [SpaceObjectWithFluxes](README.md#spaceobjectwithfluxes)
+ - [User](README.md#user)
+
+### ComparisonObject
+
+#### Properties
+| Name           | Type                                     | Description | Notes |
+|----------------|------------------------------------------|-------------|-------|
+| **variable**   | [**SpaceObject**](README.md#spaceobject) |             |       |
+| **comparison** | [**SpaceObject**](README.md#spaceobject) |             |       |
+| **data**       | [**[FluxData]**](README.md#fluxdata)     |             |       |
+
+[[Back to Model list]](README.md#documentation-for-models)
+
+### ErrorMessage
+
+#### Properties
+| Name        | Type    | Description | Notes      |
+|-------------|---------|-------------|------------|
+| **id**      | **str** |             | [optional] |
+| **message** | **str** |             | [optional] |
+
+[[Back to Model list]](README.md#documentation-for-models)
+
+### Flux
+
+#### Properties
+| Name              | Type                                             | Description | Notes |
+|-------------------|--------------------------------------------------|-------------|-------|
+| **right_asc**     | **str**                                          |             |       |
+| **declination**   | **str**                                          |             |       |
+| **added_by**      | **str**                                          |             |       |
+| **ap_auto**       | **float**                                        |             |       |
+| **apertures**     | **[float]**                                      |             |       |
+| **photo**         | [**PhotoProperties**](README.md#photoproperties) |             |       |
+| **ap_auto_dev**   | **float**                                        |             |       |
+| **aperture_devs** | **[float]**                                      |             |       |
+
+[[Back to Model list]](README.md#documentation-for-models)
+
+### FluxData
+
+#### Properties
+| Name                  | Type                         | Description | Notes |
+|-----------------------|------------------------------|-------------|-------|
+| **right_asc**         | **str**                      |             |       |
+| **dec**               | **str**                      |             |       |
+| **ap_auto**           | **str**                      |             |       |
+| **ap_auto_dev**       | **float**                    |             |       |
+| **apertures**         | **[str]**                    |             |       |
+| **aperture_devs**     | **[float]**                  |             |       |
+| **magnitude**         | **float**                    |             |       |
+| **deviation**         | **float**                    |             |       |
+| **username**          | **str**                      |             |       |
+| **night**             | [**Night**](README.md#night) |             |       |
+| **exp_middle**        | **str**                      |             |       |
+| **cmp_ap_auto**       | **str**                      |             |       |
+| **cmp_ap_auto_dev**   | **float**                    |             |       |
+| **cmp_apertures**     | **[str]**                    |             |       |
+| **cmp_aperture_devs** | **[float]**                  |             |       |
+
+[[Back to Model list]](README.md#documentation-for-models)
+
+### Night
+
+#### Properties
+| Name                         | Type    | Description | Notes |
+|------------------------------|---------|-------------|-------|
+| **first_date_of_the_night**  | **str** |             |       |
+| **second_date_of_the_night** | **str** |             |       |
+| **ap_to_be_used**            | **str** |             |       |
+| **cmp_ap_to_be_used**        | **str** |             |       |
+
+[[Back to Model list]](README.md#documentation-for-models)
+
+### PhotoProperties
+
+#### Properties
+| Name               | Type         | Description | Notes |
+|--------------------|--------------|-------------|-------|
+| **exposure_begin** | **datetime** |             |       |
+| **exposure_end**   | **datetime** |             |       |
+
+[[Back to Model list]](README.md#documentation-for-models)
+
+### SpaceObject
+
+#### Properties
+| Name             | Type      | Description | Notes |
+|------------------|-----------|-------------|-------|
+| **id**           | **str**   |             |       |
+| **catalog**      | **str**   |             |       |
+| **name**         | **str**   |             |       |
+| **right_asc**    | **str**   |             |       |
+| **declination**  | **str**   |             |       |
+| **magnitude**    | **float** |             |       |
+| **fluxes_count** | **int**   |             |       |
+
+[[Back to Model list]](README.md#documentation-for-models)
+
+### SpaceObjectWithFluxes
+Extends SpaceObject by fluxes.
+
+#### Properties
+| Name             | Type                         | Description                              | Notes |
+|------------------|------------------------------|------------------------------------------|-------|
+| **fluxes**       | [**[Flux]**](README.md#flux) | Additional field compared to SpaceObject |       |
+| **id**           | **str**                      |                                          |       |
+| **catalog**      | **str**                      |                                          |       |
+| **name**         | **str**                      |                                          |       |
+| **right_asc**    | **str**                      |                                          |       |
+| **declination**  | **str**                      |                                          |       |
+| **magnitude**    | **float**                    |                                          |       |
+| **fluxes_count** | **int**                      |                                          |       |
+
+[[Back to Model list]](README.md#documentation-for-models)
+
+### User
+
+#### Properties
+| Name            | Type    | Description | Notes |
+|-----------------|---------|-------------|-------|
+| **username**    | **str** | Unique      |       |
+| **description** | **str** |             |       |
+
+[[Back to Model list]](README.md#documentation-for-models)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
