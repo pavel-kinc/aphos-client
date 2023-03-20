@@ -12,6 +12,18 @@ Install: `pip install -i https://test.pypi.org/simple/ aphos-openapi`
 Upgrade: `pip unistall aphos_openapi` + Install (will be changed with going to real Pypi)
 (If you have pip3 instead of pip, just use pip3)
 
+## Contents:
+References work only in github: https://github.com/pavel-kinc/aphos-client/blob/main/README.md
+* [Basic info](README.md#aphos-client-for-retrieving-data-in-python)
+* [Installation](README.md#installation-of-package--aphosopenapi)
+* [Basic usage](README.md#usage-api-models-)
+* [Coordinates usage](README.md#usage-coordinates-)
+* [GraphData usage](README.md#usage-graphdata-)
+* [Requirements](README.md#requirements-)
+* [Support](README.md#support)
+* [Functions documentation](README.md#documentation-for-functions)
+* [Api models documentation](README.md#documentation-for-models)
+
 ## Usage Api models:
 
 ```
