@@ -6,25 +6,26 @@ Server is accessible from: https://ip-147-251-21-104.flt.cloud.muni.cz/
 Swagger UI (Interface for api of the server): https://ip-147-251-21-104.flt.cloud.muni.cz/swagger-ui/index.html  
 Openapi json or yaml file (documentation of api): https://ip-147-251-21-104.flt.cloud.muni.cz/api-docs
 
-## Installation of Package: `aphos_openapi`
+## Installation
+### Package: `aphos_openapi`
 
 Install: `pip install -i https://test.pypi.org/simple/ aphos-openapi`  
 Upgrade: `pip unistall aphos_openapi` + Install (will be changed with going to real Pypi)
 (If you have pip3 instead of pip, just use pip3)
 
-## Contents:
+## Contents
 References work only in github: https://github.com/pavel-kinc/aphos-client/blob/main/README.md
 * [Basic info](README.md#aphos-client-for-retrieving-data-in-python)
-* [Installation](README.md#installation-of-package--aphosopenapi)
-* [Basic usage](README.md#usage-api-models-)
-* [Coordinates usage](README.md#usage-coordinates-)
-* [GraphData usage](README.md#usage-graphdata-)
-* [Requirements](README.md#requirements-)
+* [Installation](README.md#installation)
+* [Basic usage](README.md#usage-api-models)
+* [Coordinates usage](README.md#usage-coordinates)
+* [GraphData usage](README.md#usage-graphdata)
+* [Requirements](README.md#requirements)
 * [Support](README.md#support)
 * [Functions documentation](README.md#documentation-for-functions)
 * [Api models documentation](README.md#documentation-for-models)
 
-## Usage Api models:
+## Usage Api models
 
 ```
 from aphos_openapi import aphos
@@ -68,8 +69,8 @@ if __name__ == '__main__':
     my_function()
 ```
 
-## Usage Coordinates:
-__More info in package.__
+## Usage Coordinates
+__More info about object in package.__
 
 ```
 from aphos_openapi import aphos
@@ -96,7 +97,7 @@ space_objects = aphos.get_objects_by_params(coordinates=coords7)
 pprint(space_objects)
 ```
 
-## Usage GraphData:
+## Usage GraphData
 __Main methods:__ 
 * constructor 
 * to_file()
@@ -124,7 +125,7 @@ data_from_file.composite_graph()
 data_from_file.phase_graph(2455957.5, 1.209373)  # start of epoch and period
 ```
 
-## Requirements:
+## Requirements
 
 * Python >=3.7,
 * 'urllib3'>=1.25.3,
