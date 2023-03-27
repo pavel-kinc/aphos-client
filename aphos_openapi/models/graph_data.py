@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt  # type: ignore
+from matplotlib.ticker import MultipleLocator, FormatStrFormatter
 from matplotlib.transforms import Bbox as _Box  # type: ignore
 
 from aphos_openapi.model.comparison_object import ComparisonObject as _Comp
@@ -96,7 +97,7 @@ class GraphData:
         """
         d: Dict[str, List[Tuple[float, float, float]]] = dict()
         fig, ax = _plt.subplots(figsize=(11, 7))
-        fig.subplots_adjust(right=0.8)
+        fig.subplots_adjust(right=0.8, bottom=0.15)
         _plt.title(f"Light curve of {self._info_str()}")
         _plt.xlabel("Julian Date (JD)")
         _plt.ylabel("Magnitude")
@@ -119,6 +120,8 @@ class GraphData:
         toggle_legend(legend, plts, errs)
 
         ax.invert_yaxis()
+        ax.ticklabel_format(useOffset=False, style='plain')
+        _plt.setp(ax.get_xticklabels(), rotation=10, horizontalalignment='right')
         _plt.show()
 
     def composite_graph(self) -> None:
