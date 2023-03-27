@@ -168,6 +168,7 @@ class GraphData:
         #    scroll(fig, legend)
         box = deviations(_plt, errs, [plt], None)
         # toggle_legend(legend, plts, errs)
+        ax.invert_yaxis()
         _plt.show()
 
     def phase_graph(self, moment: float, period: float) -> None:
@@ -196,6 +197,7 @@ class GraphData:
         plt, = ax.plot(a, b, "o")
         errs.append(ax.errorbar(a, b, yerr=c, fmt=" ", color="#1f77b4", visible=False))
         box = deviations(_plt, errs, [plt], None)
+        ax.invert_yaxis()
         _plt.show()
 
 
