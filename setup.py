@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="aphos_openapi",
-    version="2.1.6",
+    version="2.1.7",
     author="Pavel Kinc",
     description="APhoS Python library for data representation",
     long_description=long_description,
@@ -17,7 +17,7 @@ setuptools.setup(
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.6',
+    python_requires='>=3.7',
     install_requires=[
         'urllib3>=1.25.3',
         'python-dateutil',
