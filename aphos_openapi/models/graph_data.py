@@ -53,6 +53,15 @@ class GraphData:
     def __repr__(self) -> str:
         return _pprint.pformat(self.__dict__)
 
+    def _info_str(self) -> str:
+        """
+        Private method to return basic info in string.
+
+        Returns: str, info about the object.
+
+        """
+        return f"{self.var_catalog} {self.variable} to {self.cmp_catalog} {self.comparison}"
+
     def to_file(self, path: str) -> None:
         """
         File represantation of given object.
@@ -88,7 +97,7 @@ class GraphData:
         d: Dict[str, List[Tuple[float, float, float]]] = dict()
         fig, ax = _plt.subplots(figsize=(11, 7))
         fig.subplots_adjust(right=0.8)
-        _plt.title(f"Light curve of {self.variable} {self.var_catalog} to {self.comparison} {self.cmp_catalog}")
+        _plt.title(f"Light curve of {self._info_str()}")
         _plt.xlabel("Julian Date (JD)")
         _plt.ylabel("Magnitude")
         for a, b, c, u in self.data_list:
@@ -109,6 +118,7 @@ class GraphData:
             scroll(fig, legend)
         toggle_legend(legend, plts, errs)
 
+        ax.invert_yaxis()
         _plt.show()
 
     def composite_graph(self) -> None:
@@ -124,9 +134,8 @@ class GraphData:
         Every measurement is seperated by 2 lines, distance is given by the given constant.
         """
         fig, ax = _plt.subplots(figsize=(11, 7))
-        _plt.title(f"Composed night light curve of {self.variable} {self.var_catalog} "
-                   f"to {self.comparison} {self.cmp_catalog}")
-        _plt.xlabel("Julian Date (JD) - compressed")
+        _plt.title(f"Composed night light curve of {self._info_str()}")
+        _plt.xlabel("Days")
         _plt.ylabel("Magnitude")
         fig.subplots_adjust(right=0.8)
         errs = []
@@ -172,8 +181,7 @@ class GraphData:
             period: time period in days
         """
         fig, ax = _plt.subplots(figsize=(11, 7))
-        _plt.title(f"Phase graph of {self.variable} {self.var_catalog} "
-                   f"to {self.comparison} {self.cmp_catalog}")
+        _plt.title(f"Phase graph of {self._info_str()}")
         _plt.xlabel("Phase")
         _plt.ylabel("Magnitude")
         fig.subplots_adjust(right=0.8)
