@@ -62,7 +62,6 @@ class SpaceObjectApi(object):
                 'nullable': [
                 ],
                 'enum': [
-                    'catalog',
                 ],
                 'validation': [
                     'min_mag',
@@ -153,8 +152,6 @@ class SpaceObjectApi(object):
                 'nullable': [
                 ],
                 'enum': [
-                    'original_cat',
-                    'reference_cat',
                 ],
                 'validation': [
                 ]
@@ -230,7 +227,6 @@ class SpaceObjectApi(object):
                 'nullable': [
                 ],
                 'enum': [
-                    'catalog',
                 ],
                 'validation': [
                 ]
