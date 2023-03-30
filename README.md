@@ -9,21 +9,31 @@ Openapi json or yaml file (documentation of api): https://ip-147-251-21-104.flt.
 ## Installation
 ### Package: `aphos_openapi`
 
-Install: `pip install -i https://test.pypi.org/simple/ aphos-openapi`  
-Upgrade: `pip unistall aphos_openapi` + Install (will be changed with going to real Pypi)
+Install: `pip install aphos-openapi`  
+Upgrade: `pip install aphos_openapi --upgrade`
 (If you have pip3 instead of pip, just use pip3)
 
 ## Contents
 References work only in github: https://github.com/pavel-kinc/aphos-client/blob/main/README.md
 * [Basic info](README.md#aphos-client-for-retrieving-data-in-python)
 * [Installation](README.md#installation)
+* [Requirements](README.md#requirements)
 * [Basic usage](README.md#usage-api-models)
 * [Coordinates usage](README.md#usage-coordinates)
 * [GraphData usage](README.md#usage-graphdata)
-* [Requirements](README.md#requirements)
 * [Support](README.md#support)
 * [Functions documentation](README.md#documentation-for-functions)
 * [Api models documentation](README.md#documentation-for-models)
+
+
+## Requirements
+
+* Python >=3.8,
+* 'urllib3'>=1.25.3,
+* 'python-dateutil',
+* 'matplotlib',
+* 'astropy'
+
 
 ## Usage Api models
 
@@ -124,14 +134,6 @@ pprint(data_from_file.data_list[0])  # print how 1 row of data looks like
 data_from_file.composite_graph()
 data_from_file.phase_graph(2455957.5, 1.209373)  # start of epoch and period
 ```
-
-## Requirements
-
-* Python >=3.7,
-* 'urllib3'>=1.25.3,
-* 'python-dateutil',
-* 'matplotlib',
-* 'astropy'
 
 ## Support
 
