@@ -39,7 +39,7 @@ class Coordinates:
             .format(self.rightAsc, self.declination, self.radius)
 
 
-def parse_coordinates(coordinates: Union[str,_SkyCoord], default_unit: str = 'h') -> Tuple[str, str]:
+def parse_coordinates(coordinates: Union[str, _SkyCoord], default_unit: str = 'h') -> Tuple[str, str]:
     """
     Parse coordinates.
 

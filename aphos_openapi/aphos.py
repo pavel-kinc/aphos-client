@@ -1,4 +1,5 @@
-"""Module providing pretty print."""
+"""Module providing access to APhoS database through API"""
+
 import io as _io  # type: ignore
 import os as _os
 from typing import Optional as _Optional
@@ -9,7 +10,8 @@ from astropy.coordinates import SkyCoord as _SkyCoord  # type: ignore
 
 import aphos_openapi  # type: ignore
 from aphos_openapi.models.coordinates import Coordinates
-#from aphos_openapi.models.graph_data import GraphData
+
+# from aphos_openapi.models.graph_data import GraphData
 
 # Defining the host is optional and defaults to http://localhost:8009
 # See configuration.py for a list of all supported configuration parameters.
@@ -203,6 +205,8 @@ def resolve_name_aphos(name: str) -> _Optional[_List[aphos_openapi.models.SpaceO
     Resolve name based on astropy name resolver and tries to find equal potential objects
     in APhoS database (Cross-identification).
 
+    !WARNING- it resolves based on coordinates and is not always correct!
+
     Args:
         name: any name by which a space object can be resolved
 
@@ -297,7 +301,7 @@ def info() -> None:
 # c=get_objects_by_params(coordinates=coords)
 # pprint(c)
 
-#k = get_var_cmp_by_ids("605-025126", "604-024943", "UCAC4", "UCAC4")  # not saturated
+# k = get_var_cmp_by_ids("605-025126", "604-024943", "UCAC4", "UCAC4")  # not saturated
 # print(k)
 # VarCmp getvarcmpbyids
 # VAR vs CMP (orig vs ref)
@@ -307,21 +311,21 @@ def info() -> None:
 # pprint(k)
 # incorect = get_object("sdfsdf")
 # print(k)
-#k = GraphData(k, users=["xkrutak"], exclude=False, saturated=False)
-#k.graph()
-#k.composite_graph()
-#k.phase_graph(2455957.5, 1.209373)
+# k = GraphData(k, users=["xkrutak"], exclude=False, saturated=False)
+# k.graph()
+# k.composite_graph()
+# k.phase_graph(2455957.5, 1.209373)
 # print(k)
 # k.to_file("./graphDataTest/data4.csv")
 # pprint(k)
-#k = GraphData("./graphDataTest/data4.csv")
+# k = GraphData("./graphDataTest/data4.csv")
 # print(k)
 # k.composite_graph()
 # print(Coordinates(_SkyCoord.from_name("UCAC4 604-024937"),0.05))
 # k.phase_graph(2455957.5, 1.209373)
-#k.graph()
-#k.composite_graph()
-#k.phase_graph()
+# k.graph()
+# k.composite_graph()
+# k.phase_graph()
 
 # print(resolve_name_aphos("USNO-B1.0 1211-0102048"))
 # print(resolve_name_aphos("SKY# 9445")[0].declination)

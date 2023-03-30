@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt  # type: ignore
-from matplotlib.ticker import MultipleLocator, FormatStrFormatter
+from matplotlib.ticker import MultipleLocator, FormatStrFormatter  # type: ignore
 from matplotlib.transforms import Bbox as _Box  # type: ignore
 
 from aphos_openapi.model.comparison_object import ComparisonObject as _Comp
@@ -43,12 +43,14 @@ class GraphData:
             exclude: if set on true, instead of including users, they will be excluded [optional]
             saturated: should be let on False, only for file work [optional]
         """
-        if type(comparison) != str:
+        if type(comparison) == _Comp:
             self.data_list = from_comparison(comparison, users, exclude, saturated)
             info = [comparison.variable.id, comparison.variable.catalog,
                     comparison.comparison.id, comparison.comparison.catalog]
-        else:
+        elif type(comparison) == str:
             info, self.data_list = from_file(comparison, users, exclude, saturated)
+        else:
+            raise TypeError("Expected ComparisonObject or str")
         self.variable, self.var_catalog, self.comparison, self.cmp_catalog = info
 
     def __repr__(self) -> str:
