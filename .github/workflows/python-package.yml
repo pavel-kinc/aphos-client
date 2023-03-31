@@ -30,6 +30,7 @@ jobs:
         python -m pip install flake8 pytest
         
         python setup.py install
+        python -m pip install responses
     - name: Test with pytest
       run: |
         pytest
