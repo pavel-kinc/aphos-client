@@ -96,6 +96,7 @@ class Configuration(object):
         self._base_path = "http://localhost:8009" if host is None else host
         """Default Base url
         """
+        # By this index you decide host name
         self.server_index = 0 if server_index is None and host is None else server_index
         self.server_operation_index = server_operation_index or {}
         """Default server index
@@ -391,16 +392,16 @@ class Configuration(object):
         """
         return [
             {
-                'url': "http://localhost:8009",
-                'description': "Developer server",
+                'url': "https://ip-147-251-21-104.flt.cloud.muni.cz",
+                'description': "Test server (virtual machine) - CURRENT",
             },
             {
                 'url': "https://aphos.cerit-sc.cz",
                 'description': "Main server APhoS",
             },
             {
-                'url': "https://ip-147-251-21-104.flt.cloud.muni.cz",
-                'description': "Test server (virtual machine) - CURRENT",
+                'url': "http://localhost:8009",
+                'description': "Developer server",
             }
         ]
 

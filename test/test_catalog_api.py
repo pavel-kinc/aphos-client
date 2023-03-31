@@ -10,8 +10,13 @@
 
 
 import unittest
+import responses
+from pprint import pprint
+
+from aphos_openapi.api_client import ApiClient
 
 import aphos_openapi
+
 from aphos_openapi.api.catalog_api import CatalogApi  # noqa: E501
 
 
@@ -29,7 +34,9 @@ class TestCatalogApi(unittest.TestCase):
 
         Find all catalogs  # noqa: E501
         """
-        pass
+        #pprint(self.api.get_catalogs_endpoint())
+        result = self.api.get_catalogs()
+        pprint(result)
 
 
 if __name__ == '__main__':

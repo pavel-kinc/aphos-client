@@ -13,12 +13,6 @@ from aphos_openapi.models.coordinates import Coordinates
 
 # from aphos_openapi.models.graph_data import GraphData
 
-# Defining the host is optional and defaults to http://localhost:8009
-# See configuration.py for a list of all supported configuration parameters.
-configuration = aphos_openapi.Configuration(
-    host="https://ip-147-251-21-104.flt.cloud.muni.cz/"
-    # host="http://localhost:8009"
-)
 
 DEFAULT_CATALOG = "UCAC4"
 
@@ -37,7 +31,7 @@ def get_catalogs() -> _Optional[_List[str]]:
 
     """
     # Enter a context with an instance of the API client
-    with aphos_openapi.ApiClient(configuration) as api_client:
+    with aphos_openapi.ApiClient() as api_client:
         # Create an instance of the API class
         api_instance = aphos_openapi.catalog_api.CatalogApi(api_client)
 
@@ -61,7 +55,7 @@ def get_object(object_id: str, catalog: str = DEFAULT_CATALOG) \
     Returns: SpaceObjectWithFluxes or None if there is no such object.
 
     """
-    with aphos_openapi.ApiClient(configuration) as api_client:
+    with aphos_openapi.ApiClient() as api_client:
         api_instance = aphos_openapi.space_object_api.SpaceObjectApi(api_client)
 
         try:
@@ -101,7 +95,7 @@ def get_objects_by_params(object_id: _Optional[str] = None, catalog: _Optional[s
                 if key == 'coordinates':
                     local_args[key] = str(local_args[key])
                 params[key] = local_args[key]
-        with aphos_openapi.ApiClient(configuration) as api_client:
+        with aphos_openapi.ApiClient() as api_client:
             api_instance = aphos_openapi.space_object_api.SpaceObjectApi(api_client)
             return api_instance.find_space_objects_by_params(**params)
     except aphos_openapi.OpenApiException as exc:
@@ -126,7 +120,7 @@ def get_var_cmp_by_ids(variable_id: str, comparison_id: str,
 
     """
     try:
-        with aphos_openapi.ApiClient(configuration) as api_client:
+        with aphos_openapi.ApiClient() as api_client:
             api_instance = aphos_openapi.space_object_api.SpaceObjectApi(api_client)
             return api_instance.get_comparison_by_identificators \
                 (variable_id, comparison_id, original_cat=var_catalog, reference_cat=cmp_catalog)
@@ -146,7 +140,7 @@ def get_user(username: str) -> _Optional[aphos_openapi.models.User]:
 
     """
     try:
-        with aphos_openapi.ApiClient(configuration) as api_client:
+        with aphos_openapi.ApiClient() as api_client:
             api_instance = aphos_openapi.user_api.UserApi(api_client)
             return api_instance.get_user_by_username(username)
     except aphos_openapi.OpenApiException as exc:
@@ -236,7 +230,7 @@ def upload_files(path: str) -> _List[_Tuple[str, bool, str]]:
     Returns: List of tuple (file, success of upload of the given file, info about upload).
 
     """
-    with aphos_openapi.ApiClient(configuration) as api_client:
+    with aphos_openapi.ApiClient() as api_client:
         api_instance = aphos_openapi.space_object_api.SpaceObjectApi(api_client)
         res = []
         if _os.path.isdir(path):
