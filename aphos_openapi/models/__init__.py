@@ -18,4 +18,5 @@ from aphos_openapi.model.photo_properties import PhotoProperties
 from aphos_openapi.model.space_object import SpaceObject
 from aphos_openapi.model.space_object_with_fluxes import SpaceObjectWithFluxes
 from aphos_openapi.model.user import User
+import math
 

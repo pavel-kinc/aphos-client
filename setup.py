@@ -19,7 +19,7 @@ setuptools.setup(
     ],
     python_requires='>=3.8',
     install_requires=[
-        'urllib3>=1.25.3',
+        'urllib3>=1.25.3,<2.0',
         'python-dateutil',
         'matplotlib',
         'astropy'

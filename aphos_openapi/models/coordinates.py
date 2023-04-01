@@ -1,8 +1,9 @@
-from typing import Union, Optional, List, Tuple
-
-from astropy.coordinates import SkyCoord as _SkyCoord  # type: ignore
+import math
+from typing import Tuple as _Tuple
+from typing import Union as _Union
 from astropy import units as _u  # type: ignore
 from astropy.coordinates import Angle as _Angle  # type: ignore
+from astropy.coordinates import SkyCoord as _SkyCoord  # type: ignore
 
 
 # import pprint as _pprint
@@ -17,7 +18,7 @@ class Coordinates:
         radius: float, radius, unit = degree
     """
 
-    def __init__(self, coordinates: Union[str, _SkyCoord], radius: float,
+    def __init__(self, coordinates: _Union[str, _SkyCoord], radius: float,
                  default_unit: str = 'h', radius_unit: str = 'd') -> None:
         """
         Constructor for Coordinates object.
@@ -38,8 +39,30 @@ class Coordinates:
         return '{{"rightAsc": "{}",  "declination": "{}","radius": {}}}' \
             .format(self.rightAsc, self.declination, self.radius)
 
+    def __eq__(self, other: object) -> bool:
+        """
+        Equality method for objects.
 
-def parse_coordinates(coordinates: Union[str, _SkyCoord], default_unit: str = 'h') -> Tuple[str, str]:
+        Returns true if Coordinates objects are very similar.
+        (RA on 0.01 sec diff, declination on 0.01 sec diff, radius - 0.001 sec diff)
+
+        Args:
+            other: object
+
+        Returns: if the objects are equal
+
+        """
+        if not isinstance(other, Coordinates):
+            return False
+        if self.rightAsc[:11] != other.rightAsc[:11] or self.declination[:11] != other.declination[:11]:
+            return False
+        if not math.isclose(self.radius, other.radius, abs_tol=0.001):
+            return False
+        return True
+
+
+
+def parse_coordinates(coordinates: _Union[str, _SkyCoord], default_unit: str = 'h') -> _Tuple[str, str]:
     """
     Parse coordinates.
 
@@ -67,7 +90,7 @@ def parse_coordinates(coordinates: Union[str, _SkyCoord], default_unit: str = 'h
         sky_coord.dec.to_string(unit=_u.degree, sep=':')
 
 
-def parse_radius(radius: float, radius_unit: str) -> float:
+def parse_radius(radius: float, radius_unit: str = 'd') -> float:
     """
     Parse radius.
 

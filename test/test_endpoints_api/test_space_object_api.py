@@ -13,37 +13,52 @@ import unittest
 
 import aphos_openapi
 from aphos_openapi.api.space_object_api import SpaceObjectApi  # noqa: E501
+from aphos_openapi.model.comparison_object import ComparisonObject
+from aphos_openapi.model.space_object import SpaceObject
+from aphos_openapi.model.space_object_with_fluxes import SpaceObjectWithFluxes
+
 
 
 class TestSpaceObjectApi(unittest.TestCase):
-    """SpaceObjectApi unit test stubs"""
+    """SpaceObjectApi unit test stubs
+    basic testing of endpoints.
+    """
+
+    _ucac4_stars = ("805-031770", "781-038863")
+
 
     def setUp(self):
         self.api = SpaceObjectApi()  # noqa: E501
 
     def tearDown(self):
-        pass
+        del self.api
 
     def test_find_space_objects_by_params(self):
         """Test case for find_space_objects_by_params
 
         Finds space objects by multiple data  # noqa: E501
         """
-        pass
+        objects = self.api.find_space_objects_by_params()
+        assert len(objects) >= 100
+        assert type(objects[0]) == SpaceObject
 
     def test_get_comparison_by_identificators(self):
         """Test case for get_comparison_by_identificators
 
         Comparison object of 2 SpaceObjects  # noqa: E501
         """
-        pass
+        comparison = self.api.get_comparison_by_identificators(self._ucac4_stars[0], self._ucac4_stars[1])
+        assert type(comparison) == ComparisonObject
+        assert len(comparison.data) > 1
 
     def test_get_space_object_by_id(self):
         """Test case for get_space_object_by_id
 
         Find space object by ID and catalog  # noqa: E501
         """
-        pass
+        star = self.api.get_space_object_by_id(self._ucac4_stars[0])
+        assert type(star) == SpaceObjectWithFluxes
+        assert star.id == self._ucac4_stars[0]
 
 
 if __name__ == '__main__':

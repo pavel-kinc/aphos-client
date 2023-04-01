@@ -10,24 +10,20 @@
 
 
 import unittest
-import responses
-from pprint import pprint
 
-from aphos_openapi.api_client import ApiClient
-
-import aphos_openapi
 
 from aphos_openapi.api.catalog_api import CatalogApi  # noqa: E501
 
 
 class TestCatalogApi(unittest.TestCase):
-    """CatalogApi unit test stubs"""
+    """CatalogApi unit test stubs
+    basic testing of endpoints"""
 
     def setUp(self):
         self.api = CatalogApi()  # noqa: E501
 
     def tearDown(self):
-        pass
+        del self.api
 
     def test_get_catalogs(self):
         """Test case for get_catalogs
@@ -36,7 +32,8 @@ class TestCatalogApi(unittest.TestCase):
         """
         #pprint(self.api.get_catalogs_endpoint())
         result = self.api.get_catalogs()
-        pprint(result)
+        assert len(result) >= 3
+        assert "UCAC4" in result
 
 
 if __name__ == '__main__':

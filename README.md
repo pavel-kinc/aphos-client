@@ -98,9 +98,9 @@ Coordinates below are more or less equal, more in class documentation.
 coords1 = Coordinates("21h41m55.291s +71d18m41.12s", 8, radius_unit='m')
 coords2 = Coordinates("21 41 55.291 +71 18 41.12", 0.1333333)  # default unit for RA is hour
 coords3 = Coordinates(SkyCoord("21h41m55.291s +71d18m41.12s"), 0.1333333)
-coords4 = Coordinates("21.698691944444448h +71.31142222d", 0.1333333)
+coords4 = Coordinates("21.698691944444448h +71.31142223d", 0.1333333)
 coords5 = Coordinates("21:41:55.291 +71:18:41.12", 0.1333333)
-coords6 = Coordinates("325.48037916666664d +71.31142222d", 0.1333333)
+coords6 = Coordinates("325.48037916666664d +71.31142223d", 0.1333333)
 coords7 = Coordinates("325 28 49.365 +71 18 41.12", 8, 'd', 'm')
 
 space_objects = aphos.get_objects_by_params(coordinates=coords7)
