@@ -10,7 +10,7 @@ setuptools.setup(
     description="APhoS Python library for data representation",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    packages=setuptools.find_packages(),
+    packages=setuptools.find_packages(exclude=("tests",)),
     license_files=('LICENSE',),
     classifiers=[
         "Programming Language :: Python :: 3",
