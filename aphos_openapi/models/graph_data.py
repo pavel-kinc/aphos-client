@@ -100,7 +100,7 @@ class GraphData:
         self._create_graph()
         _plt.show()
 
-    def _create_graph(self) -> list[Any]:
+    def _create_graph(self) -> List[Any]:
         """
         Create pyplot graph from data.
         Returns: Figure of given graph
