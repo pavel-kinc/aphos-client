@@ -1,4 +1,5 @@
 import os
+import sys
 import unittest
 import json
 
@@ -9,7 +10,7 @@ from pprint import pprint
 
 
 class TestGraphData(unittest.TestCase):
-    _file_name = "comparison.json"
+    _file_name = "tests/test_graph_data/comparison.json"
     #_file_name = "HALO.txt"
 
     # File comparison.pkl was created like this
@@ -51,6 +52,7 @@ class TestGraphData(unittest.TestCase):
         #print(type(comparison_json))
         #with open(self._file_name, "w") as file:
         #    file.write(comparison_json)
+        #print(os.getcwd())
         with open(self._file_name, 'r') as file:
             random_dict = json.load(file)
         #print(type(random_dict))
