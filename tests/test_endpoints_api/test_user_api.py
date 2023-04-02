@@ -11,7 +11,6 @@
 
 import unittest
 
-import aphos_openapi
 from aphos_openapi.api.user_api import UserApi  # noqa: E501
 from aphos_openapi.model.user import User
 

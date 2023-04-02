@@ -11,12 +11,11 @@
 
 import unittest
 
-import aphos_openapi
 from aphos_openapi.api.space_object_api import SpaceObjectApi  # noqa: E501
+from aphos_openapi.exceptions import NotFoundException
 from aphos_openapi.model.comparison_object import ComparisonObject
 from aphos_openapi.model.space_object import SpaceObject
 from aphos_openapi.model.space_object_with_fluxes import SpaceObjectWithFluxes
-
 
 
 class TestSpaceObjectApi(unittest.TestCase):
@@ -59,6 +58,9 @@ class TestSpaceObjectApi(unittest.TestCase):
         star = self.api.get_space_object_by_id(self._ucac4_stars[0])
         assert type(star) == SpaceObjectWithFluxes
         assert star.id == self._ucac4_stars[0]
+
+        with self.assertRaises(NotFoundException):
+            self.api.get_space_object_by_id("NONEXISTENT-123")
 
 
 if __name__ == '__main__':

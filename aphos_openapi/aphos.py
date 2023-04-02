@@ -11,8 +11,6 @@ from astropy.coordinates import SkyCoord as _SkyCoord  # type: ignore
 import aphos_openapi  # type: ignore
 from aphos_openapi.models.coordinates import Coordinates
 
-# from aphos_openapi.models.graph_data import GraphData
-
 
 DEFAULT_CATALOG = "UCAC4"
 

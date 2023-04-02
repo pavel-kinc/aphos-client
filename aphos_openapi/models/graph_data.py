@@ -1,23 +1,19 @@
-from matplotlib import lines # type: ignore
-from matplotlib.ticker import MultipleLocator, FormatStrFormatter  # type: ignore
-from matplotlib.transforms import Bbox as _Box  # type: ignore
-
-from aphos_openapi.model.comparison_object import ComparisonObject as _Comp
-from astropy.time import Time as _Time  # type: ignore
-import matplotlib as _matplotlib  # type: ignore
-import pprint as _pprint
 import csv as _csv
 import os as _os
-import matplotlib.pyplot as _plt  # type: ignore
-from matplotlib.widgets import CheckButtons  # type: ignore
+import pprint as _pprint
 from typing import Union, Optional, List, Tuple, Iterator, Any, Dict
-import datetime
-import math as _math
+
+import matplotlib as _matplotlib  # type: ignore
+import matplotlib.pyplot as _plt  # type: ignore
+from astropy.time import Time as _Time  # type: ignore
+from matplotlib import lines  # type: ignore
+from matplotlib.ticker import MultipleLocator, FormatStrFormatter  # type: ignore
+from matplotlib.transforms import Bbox as _Box  # type: ignore
+from matplotlib.widgets import CheckButtons  # type: ignore
+
+from aphos_openapi.model.comparison_object import ComparisonObject as _Comp
 
 _COMPR_JDATE_MAX = 0.06
-
-
-# import numpy as _np
 
 
 class GraphData:
@@ -188,15 +184,9 @@ class GraphData:
             b.append(y)
             c.append(z)
 
-        # print(my_list)
         plt, = ax.plot(a, b, "o")
         errs.append(ax.errorbar(a, b, yerr=c, fmt=" ", color="#1f77b4", visible=False))
-        # _, labels = ax.get_legend_handles_labels()
-        # legend = ax.legend(plts, labels, loc='upper left', title="First day of night", bbox_to_anchor=(1, 0, 0.07, 1))
-        # if len(errs) > 10:
-        #    scroll(fig, legend)
         box = deviations(_plt, errs, [plt], None)
-        # toggle_legend(legend, plts, errs)
         ax.invert_yaxis()
 
     def phase_graph(self, moment: float, period: float) -> None:

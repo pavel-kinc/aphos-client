@@ -6,9 +6,6 @@ from astropy.coordinates import Angle as _Angle  # type: ignore
 from astropy.coordinates import SkyCoord as _SkyCoord  # type: ignore
 
 
-# import pprint as _pprint
-
-
 class Coordinates:
     """
     Coordinates class for working with coordinates.
