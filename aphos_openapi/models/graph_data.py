@@ -1,4 +1,3 @@
-import matplotlib.pyplot as plt  # type: ignore
 from matplotlib.ticker import MultipleLocator, FormatStrFormatter  # type: ignore
 from matplotlib.transforms import Bbox as _Box  # type: ignore
 
@@ -86,7 +85,7 @@ class GraphData:
             for data in self.data_list:
                 writer.writerow(data)
 
-    def graph(self) -> None:
+    def graph(self) -> Any:
         """
         Graph representation of GraphData object (Light curve in time).
         This representation uses matplotlib to create a graph.
@@ -96,6 +95,15 @@ class GraphData:
         y-axis: Magnitude
 
         Graph has also togglable error bars (deviations) and user filtering based on legend.
+        """
+        self._create_graph()
+        _plt.show()
+
+    def _create_graph(self) -> None:
+        """
+        Create pyplot graph from data.
+        Returns: Figure of given graph
+
         """
         d: Dict[str, List[Tuple[float, float, float]]] = dict()
         fig, ax = _plt.subplots(figsize=(11, 7))
@@ -124,7 +132,6 @@ class GraphData:
         ax.invert_yaxis()
         ax.ticklabel_format(useOffset=False, style='plain')
         _plt.setp(ax.get_xticklabels(), rotation=10, horizontalalignment='right')
-        _plt.show()
 
     def composite_graph(self) -> None:
         """
@@ -265,7 +272,7 @@ def from_comparison(comparison: _Comp, users: Optional[List[str]],
             if flux.username in users:
                 if exclude:
                     continue
-            else:
+            elif not exclude:
                 continue
         date = _Time(flux.exp_middle).jd
         res.append(DMDU(date, flux.magnitude, flux.deviation, flux.username))
@@ -294,17 +301,17 @@ def from_file(comparison: str, users: Optional[List[str]],
             if len(row) < 3:
                 info.append(row[1])
                 continue
-            if row[2] == float('-inf') and not saturated:
+            if row[1] == float('-inf') and not saturated:
                 continue
             if users is not None:
                 if row[3] in users:
                     if exclude:
                         continue
-                else:
-                    if not exclude:
-                        continue
+                elif not exclude:
+                    continue
             res.append(DMDU(float(row[0]), float(row[1]), float(row[2]), row[3]))
     return info, res
+
 
 
 """
