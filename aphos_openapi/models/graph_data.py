@@ -1,3 +1,4 @@
+from matplotlib import lines # type: ignore
 from matplotlib.ticker import MultipleLocator, FormatStrFormatter  # type: ignore
 from matplotlib.transforms import Bbox as _Box  # type: ignore
 
@@ -99,7 +100,7 @@ class GraphData:
         self._create_graph()
         _plt.show()
 
-    def _create_graph(self) -> None:
+    def _create_graph(self) -> list[Any]:
         """
         Create pyplot graph from data.
         Returns: Figure of given graph
@@ -132,10 +133,11 @@ class GraphData:
         ax.invert_yaxis()
         ax.ticklabel_format(useOffset=False, style='plain')
         _plt.setp(ax.get_xticklabels(), rotation=10, horizontalalignment='right')
+        return plts
 
     def composite_graph(self) -> None:
         """
-        Composite graph representation of light curve in time.
+        Composite (compressed) graph representation of light curve in time.
 
         Similar to graph() but biggest "jump" between two measurements is defined by
         constant (currently 0.06 JD -> ~1.5 hour).
@@ -144,6 +146,17 @@ class GraphData:
         date is compromised, but relative time between values in 1 measurement is same.
 
         Every measurement is seperated by 2 lines, distance is given by the given constant.
+        """
+
+        self._create_composite_graph()
+        _plt.show()
+
+    def _create_composite_graph(self) -> None:
+        """
+        Create compressed graph.
+
+        Returns: None
+
         """
         fig, ax = _plt.subplots(figsize=(11, 7))
         _plt.title(f"Composed night light curve of {self._info_str()}")
@@ -154,17 +167,21 @@ class GraphData:
         my_list = sorted(self.data_list, key=lambda x: x.date)
         if len(my_list) == 0:
             return
+        # start from 0
         curr_min: float = 0
+        # start from 1. measurement and keep with real
         curr = my_list[0].date
         a = []
         b = []
         c = []
         for x, y, z, _ in my_list:
             if curr + _COMPR_JDATE_MAX < x:
+                # measurement pause was bigger than _COMPR_JDATE_MAX
                 _plt.axvline(x=curr_min, linewidth=0.5, color="black")
                 curr_min = curr_min + _COMPR_JDATE_MAX
                 _plt.axvline(x=curr_min, linewidth=0.5, color="black")
             else:
+                # keep relative time in days
                 curr_min = curr_min + (x - curr)
             curr = x
             a.append(curr_min)
@@ -181,13 +198,23 @@ class GraphData:
         box = deviations(_plt, errs, [plt], None)
         # toggle_legend(legend, plts, errs)
         ax.invert_yaxis()
-        _plt.show()
 
     def phase_graph(self, moment: float, period: float) -> None:
         """
         Phase graph representation.
 
         Creates phase curve for given data.
+
+        Args:
+            moment: start of epoch, julian date
+            period: time period in days
+        """
+        self._create_phase_graph(moment, period)
+        _plt.show()
+
+    def _create_phase_graph(self, moment: float, period: float) -> None:
+        """
+        Creates phase graph.
 
         Args:
             moment: start of epoch, julian date
@@ -210,7 +237,6 @@ class GraphData:
         errs.append(ax.errorbar(a, b, yerr=c, fmt=" ", color="#1f77b4", visible=False))
         box = deviations(_plt, errs, [plt], None)
         ax.invert_yaxis()
-        _plt.show()
 
 
 class DMDU:
