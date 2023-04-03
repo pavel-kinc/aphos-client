@@ -223,7 +223,7 @@ class FluxData(ModelNormal):
         self.ap_auto_dev = ap_auto_dev
         self.apertures = apertures
         self.aperture_devs = aperture_devs
-        self.magnitude = magnitude
+        self.magnitude = magnitude if type(magnitude) != str else float('-inf')
         self.deviation = deviation
         self.username = username
         self.night = night
@@ -340,7 +340,7 @@ class FluxData(ModelNormal):
         self.ap_auto_dev = ap_auto_dev
         self.apertures = apertures
         self.aperture_devs = aperture_devs
-        self.magnitude = magnitude
+        self.magnitude = magnitude if type(magnitude) != str else float('-inf')
         self.deviation = deviation
         self.username = username
         self.night = night

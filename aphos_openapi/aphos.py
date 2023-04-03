@@ -16,6 +16,8 @@ DEFAULT_CATALOG = "UCAC4"
 
 ALL_CATALOGS = "All catalogues"
 
+_DEV_CONSTANT = 2.5/aphos_openapi.math.log(10)
+
 _READ_ME = "https://test.pypi.org/project/aphos-openapi/"
 
 _WEBSITE = "https://ip-147-251-21-104.flt.cloud.muni.cz/"
@@ -184,12 +186,15 @@ def set_var_cmp_apertures(comparison: aphos_openapi.models.ComparisonObject,
 
             if not orig_ap == "saturated" and not ref_ap == "saturated":
                 flux.magnitude = \
-                    -2.5 * aphos_openapi.math.log(float(orig_ap) / float(ref_ap), 10)
+                    round(-2.5 * aphos_openapi.math.log(float(orig_ap) / float(ref_ap), 10), 7)
                 orig_dev = flux.aperture_devs[var] if var is not None else flux.ap_auto_dev
                 ref_dev = flux.cmp_aperture_devs[cmp] if cmp is not None else flux.cmp_ap_auto_dev
                 var_sq = (orig_dev / float(orig_ap)) ** 2
                 cmp_sq = (ref_dev / float(ref_ap)) ** 2
-                flux.deviation = (var_sq + cmp_sq) ** 0.5
+                flux.deviation = round(_DEV_CONSTANT * ((var_sq + cmp_sq) ** 0.5), 8)
+            else:
+                flux.magnitude = float('-inf')
+                flux.deviation = None
 
 
 def resolve_name_aphos(name: str) -> _Optional[_List[aphos_openapi.models.SpaceObject]]:
@@ -217,7 +222,7 @@ def resolve_name_aphos(name: str) -> _Optional[_List[aphos_openapi.models.SpaceO
     return res
 
 
-def upload_files(path: str) -> _List[_Tuple[str, bool, str]]:
+def _upload_files(path: str) -> _List[_Tuple[str, bool, str]]:
     """
     Upload files as Anounymous user. Files are in format csv, with delimiter ';',
     generated from SIPS software. For authenticated upload use website -> info().
@@ -241,14 +246,14 @@ def upload_files(path: str) -> _List[_Tuple[str, bool, str]]:
             for file, thread in files_threads:
                 try:
                     res.append((file, True, thread.get()))
-                except aphos_openapi.OpenApiException as exc:
-                    res.append((file, False, exc))
+                except aphos_openapi.ApiException as exc:
+                    res.append((file, False, str(exc.status)))
         else:
             csv_file = _io.FileIO(path, 'rb')
             try:
                 res.append((path, True, api_instance.upload_csv(file=csv_file)))
-            except aphos_openapi.OpenApiException as exc:
-                res.append((path, False, exc))
+            except aphos_openapi.ApiException as exc:
+                res.append((path, False, str(exc.status)))
         return res
 
 
