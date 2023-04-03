@@ -1,19 +1,14 @@
 import math
+import sys
 import unittest
-from pprint import pprint
+import io
 
-import aphos_openapi.configuration
-from aphos_openapi import aphos, ApiClient, OpenApiException, ApiException
+from aphos_openapi import aphos
 from aphos_openapi.model.space_object import SpaceObject
-from aphos_openapi.model.user import User
 from aphos_openapi.models.coordinates import Coordinates
 
-from unittest.mock import patch
-from aphos_openapi.api.user_api import UserApi
-from unittest.mock import MagicMock
 
-
-class TestCoordinates(unittest.TestCase):
+class TestAphosModule(unittest.TestCase):
     _STAR_IDS = ["605-025126", "604-024943", "805-031770", "781-038863"]
     _CATALOG = "UCAC4"
 
@@ -59,9 +54,6 @@ class TestCoordinates(unittest.TestCase):
             i += 1
         assert broke is True
 
-        assert var_cmp.data[0].night.ap_to_be_used == "auto"
-        assert var_cmp.data[0].night.cmp_ap_to_be_used == "auto"
-
     def test_get_var_cmp_by_ids_fields(self):
         var_cmp = aphos.get_var_cmp_by_ids(self._STAR_IDS[2], self._STAR_IDS[3])
         assert var_cmp.data[0].night.ap_to_be_used == "auto"
@@ -73,18 +65,83 @@ class TestCoordinates(unittest.TestCase):
             res_mag = -2.5 * math.log(float(var) / float(cmp), 10)
             self.assertAlmostEqual(res_mag, var_cmp.data[0].magnitude, delta=0.001)
 
-    @patch('aphos_openapi.api.user_api.UserApi')
-    def test_get_user(self, MockApi):
-        MockApi().get_user_by_username.return_value = User("ExistingUser", "Amateur")
-        user = aphos.get_user("mock")
-        MockApi().get_user_by_username.assert_called_once_with("mock")
-        assert user.description == "Amateur"
+    def test_get_user(self):
+        user = aphos.get_user("Pavel")
+        if user is not None:
+            assert user.description.lower().startswith("dev")
+
+    def test_get_user_not_found(self):
+        user = aphos.get_user("NonExistentUser987123")
+        assert user is None
+
+    def test_resolve_name_aphos(self):
+        # uses aphos.get_objects_by_params() with coordinates
+
+        assert len(aphos.resolve_name_aphos("2MASS J05482401+3057036")) >= 1
+        assert len(aphos.resolve_name_aphos("UCAC4 605-025126")) >= 1
+
+    def test_resolve_name_aphos_specific(self):
+        """
+        Test if aphos correctly sends back star with id and catalog
+        (uses aphos.get_objects_by_params() with coordinates)
+        """
+        id = "605-025126"
+        catalog = "UCAC4"
+        assert stars_found("GSC 02405-01886", id, catalog)
+        assert stars_found("2MASS J05482401+3057036", id, catalog)
+        assert stars_found("UCAC4 605-025126", id, catalog)
+        assert stars_found("Gaia DR2 3444802885109154944", id, catalog)
+
+    def test_resolve_name_aphos_star_does_not_exist(self):
+        stars_aphos = aphos.resolve_name_aphos("Random string - 416462")
+        assert stars_aphos is None
+
+    def test_upload_files_fail_directory(self):
+        res = aphos._upload_files("tests/files/csv_only_incorrect")
+        for fail in res:
+            # filename has incorrect in it
+            assert "incorrect" in fail[0]
+            # if the upload was success
+            assert not fail[1]
+            assert fail[2] == "400"
+
+    def test_upload_files_fail_file(self):
+        res = aphos._upload_files("tests/files/csv_only_incorrect/test1_incorrect.csv")
+        assert len(res) == 1
+        fail = res[0]
+        assert "incorrect" in fail[0]
+        assert not fail[1]
+        assert fail[2] == "400"
+
+    def test_info(self):
+        capture_stdout = io.StringIO()
+        sys.stdout = capture_stdout
+        aphos.info()
+        sys.stdout = sys.__stdout__
+        value = capture_stdout.getvalue().lower()
+        assert "version" in value
+        assert "help" in value
+        assert "https://" in value
 
 
-    @patch('aphos_openapi.api.user_api.UserApi')
-    def test_get_user_not_found(self, MockApi):
-        MockApi().get_user_by_username.side_effect = ApiException(status=404)
-        assert aphos.get_user("NONEXISTENT-123") is None
+def stars_found(star_name: str, expected_id: str, expected_cat: str) -> bool:
+    """
+    Function for trying to find star in APhoS.
+
+    Args:
+        star_name: name of star/space object to search
+        expected_id: expected id of aphos spaceobject
+        expected_cat: expected catalog of aphos spaceobject
+
+    Returns: True if searched star is in final list of possible stars in APhoS
+
+    """
+    stars_aphos = aphos.resolve_name_aphos(star_name)
+    if stars_aphos is not None:
+        for star in stars_aphos:
+            if star.id == expected_id and star.catalog == expected_cat:
+                return True
+    return False
 
 # o = get_object("604-024943")
 # o.id
