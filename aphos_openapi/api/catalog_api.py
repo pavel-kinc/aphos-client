@@ -40,7 +40,7 @@ class CatalogApi(object):
             settings={
                 'response_type': ([str],),
                 'auth': [],
-                'endpoint_path': '/api/catalog/getCatalogs',
+                'endpoint_path': '/api/catalogs',
                 'operation_id': 'get_catalogs',
                 'http_method': 'GET',
                 'servers': None,

@@ -41,7 +41,7 @@ class UserApi(object):
             settings={
                 'response_type': (User,),
                 'auth': [],
-                'endpoint_path': '/api/user/current',
+                'endpoint_path': '/api/users/current',
                 'operation_id': 'get_logged_user',
                 'http_method': 'GET',
                 'servers': None,
@@ -84,7 +84,7 @@ class UserApi(object):
             settings={
                 'response_type': (User,),
                 'auth': [],
-                'endpoint_path': '/api/user/{name}',
+                'endpoint_path': '/api/users/{name}',
                 'operation_id': 'get_user_by_username',
                 'http_method': 'GET',
                 'servers': None,
