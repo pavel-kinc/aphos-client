@@ -1,7 +1,7 @@
 # APhoS client for retrieving data in Python
 
-This is Amateur Photometric Survey (APhoS) Application Programming Interface.  
-Contains models and functions for work with data in APhoS database.  
+This is Amateur Photometric Survey (APhoS) client for web application.  
+Contains documentation about modules, models and functions for working with astronomical data from APhoS database.  
 Server is accessible from: https://ip-147-251-21-104.flt.cloud.muni.cz/  
 Swagger UI (Interface for api of the server): https://ip-147-251-21-104.flt.cloud.muni.cz/swagger-ui/index.html  
 Openapi json or yaml file (documentation of api): https://ip-147-251-21-104.flt.cloud.muni.cz/api-docs
@@ -22,8 +22,8 @@ References work only in github: https://github.com/pavel-kinc/aphos-client/blob/
 * [Coordinates usage](README.md#usage-coordinates)
 * [GraphData usage](README.md#usage-graphdata)
 * [Support](README.md#support)
-* [Functions documentation](README.md#documentation-for-functions)
-* [Api models documentation](README.md#documentation-for-models)
+* [Functions](README.md#documentation-for-functions)
+* [Api models](README.md#documentation-for-models)
 
 
 ## Requirements
