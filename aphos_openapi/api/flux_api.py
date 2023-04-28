@@ -122,7 +122,7 @@ class FluxApi(object):
             settings={
                 'response_type': (SpaceObjectWithFluxes,),
                 'auth': [],
-                'endpoint_path': '/api/space-objects/find',
+                'endpoint_path': '/api/space-objects/search',
                 'operation_id': 'get_space_object_by_id',
                 'http_method': 'GET',
                 'servers': None,
@@ -184,7 +184,7 @@ class FluxApi(object):
             settings={
                 'response_type': (str,),
                 'auth': [],
-                'endpoint_path': '/api/space-objects/upload-file',
+                'endpoint_path': '/api/space-objects/upload',
                 'operation_id': 'upload_csv',
                 'http_method': 'POST',
                 'servers': None,
