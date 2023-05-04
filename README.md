@@ -7,10 +7,11 @@ Swagger UI (Interface for api of the server): https://ip-147-251-21-104.flt.clou
 Openapi json or yaml file (documentation of api): https://ip-147-251-21-104.flt.cloud.muni.cz/api-docs
 
 ## Installation
-### Package: `aphos_openapi`
+### Package: `aphos-openapi`
 
 Install: `pip install aphos-openapi`  
-Upgrade: `pip install aphos_openapi --upgrade`
+Upgrade: `pip install aphos-openapi --upgrade`
+
 (If you have pip3 instead of pip, just use pip3)
 
 ## Contents
@@ -202,7 +203,9 @@ Params:
 <br/><br/>
 
 #### upload_files(<br/>path: str) <br/>-> list[tuple[str, bool, str]]
-Upload files as Anounymous user. Files are in format csv, with delimiter ';', generated from SIPS software. For authenticated upload use website -> info().  
+!!! HIDDEN FOR NOW !!!
+
+Upload files as Anonymous user. Files are in format csv, with delimiter ';', generated from SIPS software. For authenticated upload use website -> info().  
 Returns: List of tuple (file, success of upload of the given file, info about upload).  
 Params:  
 &emsp;path - path to file or directory with files
