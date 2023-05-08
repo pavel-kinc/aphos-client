@@ -122,7 +122,7 @@ class TestGraphData(unittest.TestCase):
         for d, m, _, _ in graph_data.data_list:
             values[d] = m
 
-        plts = graph_data._create_graph()
+        plts, _ = graph_data._create_graph()
         #plt.show
         # 4 users in legend
         assert len(plts) == 4

@@ -93,10 +93,10 @@ class GraphData:
 
         Graph has also togglable error bars (deviations) and user filtering based on legend.
         """
-        self._create_graph()
+        _, box = self._create_graph()
         _plt.show()
 
-    def _create_graph(self) -> List[Any]:
+    def _create_graph(self) -> Tuple[List[Any], Optional[CheckButtons]]:
         """
         Create pyplot graph from data.
         Returns: Figure of given graph
@@ -129,7 +129,7 @@ class GraphData:
         ax.invert_yaxis()
         ax.ticklabel_format(useOffset=False, style='plain')
         _plt.setp(ax.get_xticklabels(), rotation=10, horizontalalignment='right')
-        return plts
+        return plts, box
 
     def composite_graph(self) -> None:
         """
@@ -144,10 +144,10 @@ class GraphData:
         Every measurement is seperated by 2 lines, distance is given by the given constant.
         """
 
-        self._create_composite_graph()
+        box = self._create_composite_graph()
         _plt.show()
 
-    def _create_composite_graph(self) -> None:
+    def _create_composite_graph(self) -> Optional[CheckButtons]:
         """
         Create compressed graph.
 
@@ -162,7 +162,7 @@ class GraphData:
         errs = []
         my_list = sorted(self.data_list, key=lambda x: x.date)
         if len(my_list) == 0:
-            return
+            return None
         # start from 0
         curr_min: float = 0
         # start from 1. measurement and keep with real
@@ -188,6 +188,7 @@ class GraphData:
         errs.append(ax.errorbar(a, b, yerr=c, fmt=" ", color="#1f77b4", visible=False))
         box = deviations(_plt, errs, [plt], None)
         ax.invert_yaxis()
+        return box
 
     def phase_graph(self, moment: float, period: float) -> None:
         """
@@ -199,10 +200,10 @@ class GraphData:
             moment: start of epoch, julian date
             period: time period in days
         """
-        self._create_phase_graph(moment, period)
+        box = self._create_phase_graph(moment, period)
         _plt.show()
 
-    def _create_phase_graph(self, moment: float, period: float) -> None:
+    def _create_phase_graph(self, moment: float, period: float) -> Optional[CheckButtons]:
         """
         Creates phase graph.
 
@@ -227,6 +228,7 @@ class GraphData:
         errs.append(ax.errorbar(a, b, yerr=c, fmt=" ", color="#1f77b4", visible=False))
         box = deviations(_plt, errs, [plt], None)
         ax.invert_yaxis()
+        return box
 
 
 class DMDU:
