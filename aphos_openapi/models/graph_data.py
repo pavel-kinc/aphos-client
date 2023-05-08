@@ -96,7 +96,7 @@ class GraphData:
         _, box = self._create_graph()
         _plt.show()
 
-    def _create_graph(self) -> Tuple[List[Any], Optional[CheckButtons]]:
+    def _create_graph(self, ylabel: str = "Brightness [mag]") -> Tuple[List[Any], Optional[CheckButtons]]:
         """
         Create pyplot graph from data.
         Returns: Figure of given graph
@@ -107,7 +107,7 @@ class GraphData:
         fig.subplots_adjust(right=0.8, bottom=0.15)
         _plt.title(f"Light curve of {self._info_str()}")
         _plt.xlabel("Julian Date (JD)")
-        _plt.ylabel("Brightness [mag]")
+        _plt.ylabel(ylabel)
         for a, b, c, u in self.data_list:
             key = u[0:15]
             d.setdefault(key, []).append((a, b, c))
@@ -329,7 +329,6 @@ def from_file(comparison: str, users: Optional[List[str]],
                     continue
             res.append(DMDU(float(row[0]), float(row[1]), float(row[2]), row[3]))
     return info, res
-
 
 
 """

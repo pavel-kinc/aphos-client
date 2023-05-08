@@ -103,7 +103,7 @@ class TestGraphData(unittest.TestCase):
             json_dict = json.load(file)
         graph_data = GraphData(ComparisonObject(**json_dict))
 
-        graph_data._create_graph()
+        graph_data._create_graph("Magnitude")
         actual = "tests/files/actual_fig.png"
         plt.savefig(actual)
         s = compare_images("tests/files/fig.png", actual, 0.001)
