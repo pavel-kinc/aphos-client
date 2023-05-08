@@ -89,7 +89,7 @@ class GraphData:
 
         x-axis: Julian date (normal format)
 
-        y-axis: Magnitude
+        y-axis: Brightness [mag]
 
         Graph has also togglable error bars (deviations) and user filtering based on legend.
         """
@@ -107,7 +107,7 @@ class GraphData:
         fig.subplots_adjust(right=0.8, bottom=0.15)
         _plt.title(f"Light curve of {self._info_str()}")
         _plt.xlabel("Julian Date (JD)")
-        _plt.ylabel("Magnitude")
+        _plt.ylabel("Brightness [mag]")
         for a, b, c, u in self.data_list:
             key = u[0:15]
             d.setdefault(key, []).append((a, b, c))
@@ -157,7 +157,7 @@ class GraphData:
         fig, ax = _plt.subplots(figsize=(11, 7))
         _plt.title(f"Composed night light curve of {self._info_str()}")
         _plt.xlabel("Days")
-        _plt.ylabel("Magnitude")
+        _plt.ylabel("Brightness [mag]")
         fig.subplots_adjust(right=0.8)
         errs = []
         my_list = sorted(self.data_list, key=lambda x: x.date)
@@ -214,7 +214,7 @@ class GraphData:
         fig, ax = _plt.subplots(figsize=(11, 7))
         _plt.title(f"Phase graph of {self._info_str()}")
         _plt.xlabel("Phase")
-        _plt.ylabel("Magnitude")
+        _plt.ylabel("Brightness [mag]")
         fig.subplots_adjust(right=0.8)
         a = []
         b = []
