@@ -22,6 +22,6 @@ setuptools.setup(
         'urllib3>=1.25.3,<2.0',
         'python-dateutil',
         'matplotlib',
-        'astropy'
+        'astropy<=5.2.2'
     ]
 )
