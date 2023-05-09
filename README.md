@@ -3,7 +3,7 @@
 This is Amateur Photometric Survey (APhoS) client for web application.  
 Contains documentation about modules, models and functions for working with astronomical data from APhoS database.  
 Server is accessible from: https://aphos.cerit-sc.cz/  
-Swagger UI (Interface for api of the server): https://aphos.cerit-sc.cz/swagger-ui/index.html
+Swagger UI (Interface for api of the server): https://aphos.cerit-sc.cz/swagger-ui/index.html  
 Openapi json or yaml file (documentation of api): https://aphos.cerit-sc.cz/openapi
 
 ## Installation
