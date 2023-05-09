@@ -1,3 +1,5 @@
+# Docs for generated code
+
 # aphos-openapi
 This is Amateur Photometric Survey (APhoS) Application Programming Interface. 
 

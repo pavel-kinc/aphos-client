@@ -392,12 +392,12 @@ class Configuration(object):
         """
         return [
             {
-                'url': "https://ip-147-251-21-104.flt.cloud.muni.cz",
-                'description': "Test server (virtual machine) - CURRENT",
-            },
-            {
                 'url': "https://aphos.cerit-sc.cz",
                 'description': "Main server APhoS",
+            },
+            {
+                'url': "https://ip-147-251-21-104.flt.cloud.muni.cz",
+                'description': "Test server (virtual machine) - CURRENT",
             },
             {
                 'url': "http://localhost:8009",
