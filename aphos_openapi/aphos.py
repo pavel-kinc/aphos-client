@@ -20,7 +20,7 @@ _DEV_CONSTANT = 2.5/aphos_openapi.math.log(10)
 
 _READ_ME = "https://test.pypi.org/project/aphos-openapi/"
 
-_WEBSITE = "https://ip-147-251-21-104.flt.cloud.muni.cz/"
+_WEBSITE = "https://aphos.cerit-sc.cz/"
 
 
 def get_catalogs() -> _Optional[_List[str]]:
