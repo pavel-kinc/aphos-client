@@ -103,7 +103,7 @@ class TestGraphData(unittest.TestCase):
             json_dict = json.load(file)
         graph_data = GraphData(ComparisonObject(**json_dict))
 
-        graph_data._create_graph("Magnitude")
+        graph_data._create_graph("Magnitude", 0.15, 10)
         actual = "tests/files/actual_fig.png"
         plt.savefig(actual)
         s = compare_images("tests/files/fig.png", actual, 0.001)
@@ -112,7 +112,7 @@ class TestGraphData(unittest.TestCase):
 
         # compare_images returns None, if equal
         assert s is None
-        #plt.show()
+        # plt.show()
 
     def test_graph_data_graph_axes(self):
         with open(self._file_json, 'r') as file:
@@ -123,7 +123,7 @@ class TestGraphData(unittest.TestCase):
             values[d] = m
 
         plts, _ = graph_data._create_graph()
-        #plt.show
+        # plt.show
         # 4 users in legend
         assert len(plts) == 4
 

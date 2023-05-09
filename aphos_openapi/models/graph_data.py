@@ -96,7 +96,8 @@ class GraphData:
         _, box = self._create_graph()
         _plt.show()
 
-    def _create_graph(self, ylabel: str = "Brightness [mag]") -> Tuple[List[Any], Optional[CheckButtons]]:
+    def _create_graph(self, ylabel: str = "Brightness [mag]", bottom: float = 0.2,
+                      rotation: int = 14) -> Tuple[List[Any], Optional[CheckButtons]]:
         """
         Create pyplot graph from data.
         Returns: Figure of given graph
@@ -104,7 +105,7 @@ class GraphData:
         """
         d: Dict[str, List[Tuple[float, float, float]]] = dict()
         fig, ax = _plt.subplots(figsize=(11, 7))
-        fig.subplots_adjust(right=0.8, bottom=0.15)
+        fig.subplots_adjust(right=0.8, bottom=bottom)
         _plt.title(f"Light curve of {self._info_str()}")
         _plt.xlabel("Julian Date (JD)")
         _plt.ylabel(ylabel)
@@ -115,20 +116,20 @@ class GraphData:
         plts = []
         for key, val in d.items():
             a, b, c = zip(*val)
-            plt, = ax.plot(a, b, "o", label=key)
-            plts.append(plt)
-            errs.append(ax.errorbar(a, b, yerr=c, fmt=" ", label=key, color="#1f77b4", visible=False))
+            errs.append(ax.errorbar(a, b, yerr=c, fmt="o", label=key, visible=True))
+            plts.append(errs[-1].lines[0])
+            plts[-1].set_label(key)
         _, labels = ax.get_legend_handles_labels()
         legend = ax.legend(plts, labels, loc='upper left', title="Username", bbox_to_anchor=(1, 0, 0.07, 1))
-        box = deviations(_plt, errs, plts, legend)
+        box = deviations(_plt, errs)
 
         if len(errs) > 10:
             scroll(fig, legend)
-        toggle_legend(legend, plts, errs)
+        toggle_legend(legend, errs, box)
 
         ax.invert_yaxis()
         ax.ticklabel_format(useOffset=False, style='plain')
-        _plt.setp(ax.get_xticklabels(), rotation=10, horizontalalignment='right')
+        _plt.setp(ax.get_xticklabels(), rotation=rotation, horizontalalignment='right')
         return plts, box
 
     def composite_graph(self) -> None:
@@ -184,9 +185,8 @@ class GraphData:
             b.append(y)
             c.append(z)
 
-        plt, = ax.plot(a, b, "o")
-        errs.append(ax.errorbar(a, b, yerr=c, fmt=" ", color="#1f77b4", visible=False))
-        box = deviations(_plt, errs, [plt], None)
+        errs.append(ax.errorbar(a, b, yerr=c, fmt="o", visible=True))
+        box = deviations(_plt, errs)
         ax.invert_yaxis()
         return box
 
@@ -224,9 +224,8 @@ class GraphData:
             a.append(((x - moment) / period) % 1)
             b.append(y)
             c.append(z)
-        plt, = ax.plot(a, b, "o")
-        errs.append(ax.errorbar(a, b, yerr=c, fmt=" ", color="#1f77b4", visible=False))
-        box = deviations(_plt, errs, [plt], None)
+        errs.append(ax.errorbar(a, b, yerr=c, fmt="o", visible=True))
+        box = deviations(_plt, errs)
         ax.invert_yaxis()
         return box
 
@@ -336,35 +335,31 @@ Graph handling and event handlers for matplotlib graph helper functions.
 """
 
 
-def deviations(plot: _matplotlib.pyplot, errors: List[Any],
-               plts: List[_matplotlib.lines.Line2D],
-               legend: Optional[_matplotlib.legend.Legend]) -> CheckButtons:
+def deviations(plot: _matplotlib.pyplot, errors: List[Any]) -> CheckButtons:
     """
     Serves as checkbutton for graphs (Errorbar for deviations).
 
     Args:
         plot: pyplot from matplotlib
         errors: list of Errorbar containers objects
-        plts: list of Line2D (x-axis and y-axis values)
-        legend: legend of graph [optional]
 
     Returns: Checkbutton for error bar
 
     """
     button = plot.axes([0.01, 0.03, 0.18, 0.05], frameon=False)
     box = CheckButtons(button, ["show with deviations"], [False])
+    for error in errors:
+        for bar in error.lines[2]:
+            bar.set_visible(False)
 
     def set_devs(label: str) -> None:
         """
         Helper function for Checkbutton, logic of togglable errorbar.
         Event handler.
         """
-        for plt in plts:
-            plt.set_visible(True)
-        if legend is not None:
-            for a in legend.get_lines():
-                a.set_visible(True)
         for error in errors:
+            if not error.lines[0].get_visible():
+                continue
             for bar in error.lines[2]:
                 bar.set_visible(box.get_status()[0])
             plot.draw()
@@ -400,8 +395,8 @@ def scroll(fig: Any, legend: _matplotlib.legend.Legend) -> None:
     fig.canvas.mpl_connect("scroll_event", legend_scroll)
 
 
-def toggle_legend(legend: _matplotlib.legend.Legend, plts: List[_matplotlib.lines.Line2D],
-                  errs: List[Any]) -> None:
+def toggle_legend(legend: _matplotlib.legend.Legend,
+                  errs: List[Any], box: CheckButtons) -> None:
     """
     Serves as creating togglable legend for graph (and event handling).
 
@@ -423,15 +418,15 @@ def toggle_legend(legend: _matplotlib.legend.Legend, plts: List[_matplotlib.line
         """
         a = event.artist
         label = a.get_label()
-        visible = False
-        for plt in plts:
-            if plt.get_label() == label:
-                visible = plt.get_visible()
-                plt.set_visible(not visible)
         for err in errs:
             if err.get_label() == label:
+                visible = err.lines[0].get_visible()
+                err.lines[0].set_visible(not visible)
                 for bar in err.lines[2]:
-                    bar.set_visible(False)
+                    if not box.get_status()[0] and not visible:
+                        bar.set_visible(False)
+                        continue
+                    bar.set_visible(not visible)
 
         a.set_visible(not a.get_visible())
 
