@@ -18,7 +18,7 @@ ALL_CATALOGS = "All catalogues"
 
 _DEV_CONSTANT = 2.5/aphos_openapi.math.log(10)
 
-_READ_ME = "https://test.pypi.org/project/aphos-openapi/"
+_READ_ME = "https://pypi.org/project/aphos-openapi/"
 
 _WEBSITE = "https://aphos.cerit-sc.cz/"
 
